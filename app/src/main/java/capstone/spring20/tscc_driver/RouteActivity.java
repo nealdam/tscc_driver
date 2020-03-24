@@ -37,7 +37,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     LatLng origin, destination;
     List<LatLng> waypoints, locations;
     PolylineOptions polylineOptions = new PolylineOptions();
-    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         getDataFromNotificationMessage();
 
         updateLocationOnChange();
