@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="txt1">40sp</dimen>
+    <dimen name="txt2">30sp</dimen>
+
+    <dimen name="btn3">200dp</dimen>
+    <dimen name="btn4">150dp</dimen>
+    <dimen name="btn5">100dp</dimen>
+
+    <dimen name="default_space">10dp</dimen>
+    <dimen name="logo2">100dp</dimen>
+    <dimen name="image_grid_height">200dp</dimen>
+    <dimen name="image_grid_item_width">100dp</dimen>
+</resources>

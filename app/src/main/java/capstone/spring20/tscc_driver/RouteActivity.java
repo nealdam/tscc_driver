@@ -18,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -38,7 +39,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     List<LatLng> waypoints, locations;
     PolylineOptions polylineOptions = new PolylineOptions();
     LocationManager locationManager;
-
+    Marker mMarker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,17 +123,30 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(RouteActivity.this, "marker click: "+marker.getTitle(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(RouteActivity.this, TrashAreaDetailActivity.class);
+                startActivity(intent);
                 return true;
             }
         });
         // Add markers in locations and move the camera
-        mMap.addMarker(new MarkerOptions().position(origin).title("begin"));
+        mMarker = mMap.addMarker(new MarkerOptions()
+                .position(origin)
+                .title("begin")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        mMarker.showInfoWindow(); //hiện title lên map
         mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
-        mMap.addMarker(new MarkerOptions().position(destination).title("end"));
+        mMarker = mMap.addMarker(new MarkerOptions()
+                .position(destination)
+                .title("end")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        mMarker.showInfoWindow();
         for (int i = 0; i < waypoints.size(); i++) {
-            mMap.addMarker(new MarkerOptions().position(waypoints.get(i)).title("#"+(i+1)));
+            mMarker = mMap.addMarker(new MarkerOptions()
+                    .position(waypoints.get(i))
+                    .title("#"+(i+1))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+            mMarker.showInfoWindow();
         }
         // vẽ tuyến đường
         polylineOptions.addAll(locations);

@@ -3,6 +3,7 @@ package capstone.spring20.tscc_driver;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //xu ly route notification
+        routeNotificationHandle();
+
         //log lại fcm token
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -30,8 +34,20 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG, "get fcm token fail");
                         String token = task.getResult().getToken();
                         Log.d(TAG, "fcm token: " + token);
-                        Toast.makeText(MainActivity.this, "token: " + token, Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void routeNotificationHandle() {
+        Intent mainIntent = getIntent();
+        if (mainIntent.getStringExtra("origin") != null) {
+            Intent intent = new Intent(this, RouteActivity.class);
+            intent.putExtra("origin", mainIntent.getStringExtra("origin"));
+            intent.putExtra("destination", mainIntent.getStringExtra("destination"));
+            intent.putExtra("waypoints", mainIntent.getStringExtra("waypoints"));
+            intent.putExtra("locations", mainIntent.getStringExtra("locations"));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 }
