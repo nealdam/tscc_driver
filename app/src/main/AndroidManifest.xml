@@ -39,8 +39,8 @@
         <activity
             android:name=".RouteActivity"
             android:label="@string/title_activity_route" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" />
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -29,7 +29,7 @@ import java.util.List;
 
 import capstone.spring20.tscc_driver.util.LocationUtil;
 
-public class RouteActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
+public class RouteActivity extends FragmentActivity implements OnMapReadyCallback {
 
     String TAG = "RouteActivity";
 
@@ -51,7 +51,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         getDataFromNotificationMessage();
 
-        updateLocationOnChange();
+//        updateLocationOnChange();
 
 
     }
@@ -155,23 +155,5 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         line.setColor(Color.BLUE);
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
 
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
 }

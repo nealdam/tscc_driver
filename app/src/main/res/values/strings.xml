@@ -21,4 +21,22 @@
     <string name="contact">Contact</string>
     <string name="term_and_condition">Term and condition</string>
     <string name="use_guide">Use guide</string>
+    <string name="default_notification_channel_id">fcm_default_channel</string>
+    <string-array name="trashType">
+        <item>ORGANIC</item>
+        <item>RECYCLE</item>
+        <item>OTHER</item>
+    </string-array>
+    <string-array name="trashWidth">
+        <item>SMALL</item>
+        <item>NORMAL</item>
+        <item>MEDIUM</item>
+        <item>BIG</item>
+    </string-array>
+    <string-array name="trashSize">
+        <item>SMALL</item>
+        <item>NORMAL</item>
+        <item>MEDIUM</item>
+        <item>BIG</item>
+    </string-array>
 </resources>

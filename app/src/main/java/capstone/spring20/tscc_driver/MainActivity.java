@@ -21,10 +21,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //xu ly route notification
-        routeNotificationHandle();
-
         //log lại fcm token
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -38,16 +34,4 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void routeNotificationHandle() {
-        Intent mainIntent = getIntent();
-        if (mainIntent.getStringExtra("origin") != null) {
-            Intent intent = new Intent(this, RouteActivity.class);
-            intent.putExtra("origin", mainIntent.getStringExtra("origin"));
-            intent.putExtra("destination", mainIntent.getStringExtra("destination"));
-            intent.putExtra("waypoints", mainIntent.getStringExtra("waypoints"));
-            intent.putExtra("locations", mainIntent.getStringExtra("locations"));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-    }
 }
