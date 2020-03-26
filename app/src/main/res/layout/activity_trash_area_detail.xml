@@ -84,7 +84,7 @@
         android:layout_marginTop="@dimen/default_space"
         android:background="#009688"
         android:text="Done"
-        app:backgroundTint="#FFEB3B" />
+        app:backgroundTint="#4CAF50" />
 
 
 </RelativeLayout>
