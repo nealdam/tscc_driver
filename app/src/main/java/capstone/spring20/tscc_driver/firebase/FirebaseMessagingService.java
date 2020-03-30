@@ -36,6 +36,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             intent.putExtra("destination", data.get("destination"));
             intent.putExtra("waypoints", data.get("waypoints"));
             intent.putExtra("locations", data.get("locations"));
+            intent.putExtra("trashAreaIdList", data.get("trashAreaIdList"));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }

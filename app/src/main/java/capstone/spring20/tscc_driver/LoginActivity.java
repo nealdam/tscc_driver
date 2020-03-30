@@ -53,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         intent.putExtra("destination", mainIntent.getStringExtra("destination"));
         intent.putExtra("waypoints", mainIntent.getStringExtra("waypoints"));
         intent.putExtra("locations", mainIntent.getStringExtra("locations"));
+        intent.putExtra("trashAreaIdList", mainIntent.getStringExtra("trashAreaIdList"));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

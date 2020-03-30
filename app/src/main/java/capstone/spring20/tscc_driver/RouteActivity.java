@@ -1,8 +1,10 @@
 package capstone.spring20.tscc_driver;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,8 +27,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import capstone.spring20.tscc_driver.entity.TrashArea;
 import capstone.spring20.tscc_driver.util.LocationUtil;
 
 public class RouteActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -34,12 +39,15 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     String TAG = "RouteActivity";
 
     private GoogleMap mMap;
-    String originString, destinationString, waypointsString, locationsString;
+    String originString, destinationString, waypointsString, locationsString, trashAreaIdListString;
     LatLng origin, destination;
     List<LatLng> waypoints, locations;
+    String[] trashIdArray;
     PolylineOptions polylineOptions = new PolylineOptions();
     LocationManager locationManager;
-    Marker mMarker;
+    Map<Integer, Marker> markerDict = new HashMap<>();
+    int STATUS_DONE_CODE = 4, STATUS_CANCELED_CODE = 3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,11 +108,14 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         destinationString = intent.getStringExtra("destination");
         waypointsString = intent.getStringExtra("waypoints");
         locationsString = intent.getStringExtra("locations");
+        trashAreaIdListString = intent.getStringExtra("trashAreaIdList");
         //convert location string to latLng
         origin = LocationUtil.stringToLatLng(originString);
         destination = LocationUtil.stringToLatLng(destinationString);
         waypoints = LocationUtil.stringToList(waypointsString);
         locations = LocationUtil.stringToList(locationsString);
+        //convert string to array
+        trashIdArray = trashAreaIdListString.split(",");
     }
 
     /**
@@ -122,31 +133,31 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         mMap.setMyLocationEnabled(true);
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public boolean onMarkerClick(Marker marker) {
+            public boolean onMarkerClick(Marker marker) { // click marker để show trash area detail
                 Intent intent = new Intent(RouteActivity.this, TrashAreaDetailActivity.class);
-                startActivity(intent);
+                intent.putExtra("trashAreaId", marker.getTitle());
+                startActivityForResult(intent, 1);
                 return true;
             }
         });
         // Add markers in locations and move the camera
-        mMarker = mMap.addMarker(new MarkerOptions()
+        mMap.addMarker(new MarkerOptions()
                 .position(origin)
                 .title("begin")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        mMarker.showInfoWindow(); //hiện title lên map
         mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
-        mMarker = mMap.addMarker(new MarkerOptions()
+        mMap.addMarker(new MarkerOptions()
                 .position(destination)
                 .title("end")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        mMarker.showInfoWindow();
+        // tạo marker cho trash area
         for (int i = 0; i < waypoints.size(); i++) {
-            mMarker = mMap.addMarker(new MarkerOptions()
+            Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(waypoints.get(i))
-                    .title("#"+(i+1))
+                    .title(trashIdArray[i]) // gán trash id vô marker title
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-            mMarker.showInfoWindow();
+            markerDict.put(Integer.parseInt(trashIdArray[i]), marker); //save trashAreaId:marker theo dạng key:value
         }
         // vẽ tuyến đường
         polylineOptions.addAll(locations);
@@ -155,5 +166,25 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         line.setColor(Color.BLUE);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            int result = data.getIntExtra("result", -1);
+            //get marker đã được update status
+            String id = data.getStringExtra("trashAreaId");
+            Marker marker = markerDict.get(Integer.parseInt(id));
+            if (marker != null) {
+                // nếu DONE thì đổi marker màu xám
+                if (result == STATUS_DONE_CODE) {
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                } else { //nếu REPORT thì đổi marker màu vàng
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                }
+            }
 
+        } else {
+            Toast.makeText(this, "something went wrong", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
