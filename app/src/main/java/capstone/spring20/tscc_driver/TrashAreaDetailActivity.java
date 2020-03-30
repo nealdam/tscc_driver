@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import capstone.spring20.tscc_driver.Api.ApiController;
@@ -20,12 +22,12 @@ import retrofit2.Response;
 
 public class TrashAreaDetailActivity extends AppCompatActivity {
 
-    Spinner mType, mWidth, mSize;
     TrashArea trashArea;
     Button mDone, mReport;
     TSCCDriverClient client;
     String trashAreaId;
     int STATUS_DONE_CODE = 4, STATUS_CANCELED_CODE = 3;
+    EditText mTrashType, mTrashSize, mTrashWidth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,7 @@ public class TrashAreaDetailActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<TrashArea> call, Response<TrashArea> response) {
                     trashArea = response.body();
+                    showTrashAreaInformation();
                 }
 
                 @Override
@@ -50,13 +53,22 @@ public class TrashAreaDetailActivity extends AppCompatActivity {
         }
 
     }
+
+    private void showTrashAreaInformation() {
+        if (trashArea != null) {
+            mTrashType.setText(trashArea.getType().getName(), TextView.BufferType.EDITABLE);
+            mTrashSize.setText(trashArea.getSize().getName(), TextView.BufferType.EDITABLE);
+            mTrashWidth.setText(trashArea.getWidth().getName(), TextView.BufferType.EDITABLE);
+        }
+    }
+
     public void setupBasic() {
         client = ApiController.getTsccDriverClient();
-        mType = findViewById(R.id.spType);
-        mSize = findViewById(R.id.spSize);
-        mWidth = findViewById(R.id.spWidth);
         mDone = findViewById(R.id.btnDone);
         mReport = findViewById(R.id.btnReport);
+        mTrashSize = findViewById(R.id.txtTrashSize);
+        mTrashType = findViewById(R.id.txtTrashType);
+        mTrashWidth = findViewById(R.id.txtTrashWidth);
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,24 +105,6 @@ public class TrashAreaDetailActivity extends AppCompatActivity {
         }
     }
 
-    public void setupSpinner() {
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> trashTypeAdapter = ArrayAdapter.createFromResource(this,
-                R.array.trashType, android.R.layout.simple_spinner_item);
-        ArrayAdapter<CharSequence> trashWidthAdapter = ArrayAdapter.createFromResource(this,
-                R.array.trashWidth, android.R.layout.simple_spinner_item);
-        ArrayAdapter<CharSequence> trashSizeAdapter = ArrayAdapter.createFromResource(this,
-                R.array.trashSize, android.R.layout.simple_spinner_item);
-
-        // Specify the layout to use when the list of choices appears
-        trashTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        trashSizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        trashWidthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the Adapter to the spinner
-        mType.setAdapter(trashTypeAdapter);
-        mSize.setAdapter(trashSizeAdapter);
-        mWidth.setAdapter(trashWidthAdapter);
-    }
     @Override
     public void onBackPressed() {
         // đặt resultCode là Activity.RESULT_CANCELED thể hiện

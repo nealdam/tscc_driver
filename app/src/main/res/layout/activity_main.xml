@@ -19,15 +19,15 @@
         android:layout_width="@dimen/logo2"
         android:layout_height="@dimen/logo2"
         android:layout_marginTop="@dimen/default_space"
-        android:scaleType="center"
-        android:src="@drawable/ic_launcher_background"
-        android:contentDescription="@string/user_logo"/>
+        android:contentDescription="@string/user_logo"
+        android:scaleType="fitCenter"
+        android:src="@drawable/worker2"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_space"
-        android:text="Name"
+        android:text="Name: Dinh Vu"
         android:textAlignment="center"
         android:textSize="@dimen/txt2" />
 
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_space"
-        android:text=" License plate"
+        android:text=" License plate: 47B-8258"
         android:textAlignment="center"
         android:textSize="@dimen/txt2" />
 

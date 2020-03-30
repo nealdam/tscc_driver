@@ -14,6 +14,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,6 +35,7 @@ import java.util.Map;
 
 import capstone.spring20.tscc_driver.entity.TrashArea;
 import capstone.spring20.tscc_driver.util.LocationUtil;
+import okhttp3.Route;
 
 public class RouteActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -47,7 +50,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     LocationManager locationManager;
     Map<Integer, Marker> markerDict = new HashMap<>();
     int STATUS_DONE_CODE = 4, STATUS_CANCELED_CODE = 3;
-
+    Button mComplete;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,9 +62,15 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         getDataFromNotificationMessage();
 
-//        updateLocationOnChange();
-
-
+        mComplete = findViewById(R.id.btnComplete);
+        mComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RouteActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void updateLocationOnChange() {
@@ -181,10 +190,19 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
                 } else { //nếu REPORT thì đổi marker màu vàng
                     marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
                 }
+                //xóa item khỏi markerDict
+                removeItemFromMarkerDict(Integer.parseInt(id));
             }
 
         } else {
             Toast.makeText(this, "something went wrong", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void removeItemFromMarkerDict(int id) {
+        markerDict.remove(id);
+        if (markerDict.isEmpty()) {
+            mComplete.setVisibility(View.VISIBLE);
         }
     }
 }
