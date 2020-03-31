@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".TrashAreaDetailActivity"></activity>
+        <activity android:name=".RouteHistoryActivity"></activity>
 
         <service
             android:name=".firebase.FirebaseMessagingService"
@@ -41,9 +41,12 @@
             android:name=".RouteActivity"
             android:label="@string/title_activity_route" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".NotificationActivity" />
+        <activity android:name=".TrashAreaDetailActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

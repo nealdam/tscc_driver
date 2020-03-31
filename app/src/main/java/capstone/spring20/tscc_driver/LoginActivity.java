@@ -2,6 +2,7 @@ package capstone.spring20.tscc_driver;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -14,24 +15,31 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 
+import capstone.spring20.tscc_driver.entity.RouteNotification;
+import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
+
 public class LoginActivity extends AppCompatActivity {
+
+    private static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        //tạo sqlite
+        MyDatabaseHelper db = new MyDatabaseHelper(this);
+        Log.d(TAG, db.getDatabaseName());
         //firebase auth
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
-            //xu ly Route notification
-            Intent mainIntent = getIntent();
-            if (mainIntent.getStringExtra("origin") != null) {
+            //save Route notification vo db
+            if (getIntent().getStringExtra("origin") != null)
                 routeNotificationHandle();
-            } else { //nếu ko có cần xử lý route thì chuyển tới Main activity
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
+            // chuyển tới Main activity
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+
 
         } else {
             startActivityForResult(
@@ -48,13 +56,18 @@ public class LoginActivity extends AppCompatActivity {
 
     private void routeNotificationHandle() {
         Intent mainIntent = getIntent();
-        Intent intent = new Intent(this, RouteActivity.class);
-        intent.putExtra("origin", mainIntent.getStringExtra("origin"));
-        intent.putExtra("destination", mainIntent.getStringExtra("destination"));
-        intent.putExtra("waypoints", mainIntent.getStringExtra("waypoints"));
-        intent.putExtra("locations", mainIntent.getStringExtra("locations"));
-        intent.putExtra("trashAreaIdList", mainIntent.getStringExtra("trashAreaIdList"));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        String origin = mainIntent.getStringExtra("origin");
+        String destination = mainIntent.getStringExtra("destination");
+        String waypoints = mainIntent.getStringExtra("waypoints");
+        String locations = mainIntent.getStringExtra("locations");
+        String trashAreaIdList = mainIntent.getStringExtra("trashAreaIdList");
+
+        RouteNotification route = new RouteNotification(origin, destination, waypoints, locations, trashAreaIdList);
+
+        MyDatabaseHelper db = new MyDatabaseHelper(this);
+        db.addRouteNotification(route);
+
+        Intent intent = new Intent(this, NotificationActivity.class);
         startActivity(intent);
     }
 
@@ -69,7 +82,6 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();
-                return;
 
             } else {
                 // Sign in failed
@@ -79,10 +91,6 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    Toast.makeText(this, "no internet connection", Toast.LENGTH_LONG).show();
-                    return;
-                }
                 Toast.makeText(this, "unknow error", Toast.LENGTH_LONG).show();
             }
         }

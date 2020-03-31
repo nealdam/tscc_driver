@@ -33,8 +33,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import capstone.spring20.tscc_driver.entity.RouteNotification;
 import capstone.spring20.tscc_driver.entity.TrashArea;
 import capstone.spring20.tscc_driver.util.LocationUtil;
+import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
 import okhttp3.Route;
 
 public class RouteActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -51,6 +53,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     Map<Integer, Marker> markerDict = new HashMap<>();
     int STATUS_DONE_CODE = 4, STATUS_CANCELED_CODE = 3;
     Button mComplete;
+    RouteNotification routeNotification;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +69,13 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         mComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RouteActivity.this, MainActivity.class);
+                //update property Active = false
+                if (routeNotification != null) {
+                    MyDatabaseHelper db = new MyDatabaseHelper(RouteActivity.this);
+                    db.deactiveRouteNotification(routeNotification.getId());
+                }
+                //quay lại màn hình trước
+                Intent intent = new Intent(RouteActivity.this, NotificationActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -112,12 +121,12 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
 
     public void getDataFromNotificationMessage(){
         //get data from notification messsage
-        Intent intent = getIntent();
-        originString = intent.getStringExtra("origin");
-        destinationString = intent.getStringExtra("destination");
-        waypointsString = intent.getStringExtra("waypoints");
-        locationsString = intent.getStringExtra("locations");
-        trashAreaIdListString = intent.getStringExtra("trashAreaIdList");
+        routeNotification = (RouteNotification) getIntent().getSerializableExtra("routeNotification");
+        originString = routeNotification.getOrigin();
+        destinationString = routeNotification.getDestination();
+        waypointsString = routeNotification.getWaypoints();
+        locationsString = routeNotification.getLocations();
+        trashAreaIdListString = routeNotification.getTrashAreaIdList();
         //convert location string to latLng
         origin = LocationUtil.stringToLatLng(originString);
         destination = LocationUtil.stringToLatLng(destinationString);
@@ -165,7 +174,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(waypoints.get(i))
                     .title(trashIdArray[i]) // gán trash id vô marker title
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
             markerDict.put(Integer.parseInt(trashIdArray[i]), marker); //save trashAreaId:marker theo dạng key:value
         }
         // vẽ tuyến đường
@@ -184,11 +193,11 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
             String id = data.getStringExtra("trashAreaId");
             Marker marker = markerDict.get(Integer.parseInt(id));
             if (marker != null) {
-                // nếu DONE thì đổi marker màu xám
+                // nếu DONE thì đổi marker màu green
                 if (result == STATUS_DONE_CODE) {
-                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                } else { //nếu REPORT thì đổi marker màu vàng
-                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                } else { //nếu REPORT thì đổi marker màu đỏ
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                 }
                 //xóa item khỏi markerDict
                 removeItemFromMarkerDict(Integer.parseInt(id));
