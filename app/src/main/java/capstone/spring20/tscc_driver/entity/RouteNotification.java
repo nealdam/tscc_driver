@@ -110,4 +110,10 @@ public class RouteNotification implements Serializable, Comparable<RouteNotifica
         return o.getReceivedDate().compareTo(getReceivedDate());
     }
 
+    @Override
+    public String toString() {
+        return "RouteNotification{" +
+                "receivedDate=" + receivedDate +
+                '}';
+    }
 }
