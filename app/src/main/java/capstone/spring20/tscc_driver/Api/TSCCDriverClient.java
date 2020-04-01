@@ -12,8 +12,11 @@ import retrofit2.http.Path;
 public interface TSCCDriverClient {
 
     @GET("/api/trash-areas/{id}")
-    Call<TrashArea> getTrashAreaById(@Path("id") int id);
+    Call<TrashArea> getTrashAreaById(@Header("Authorization") String authorization,
+                                    @Path("id") int id);
 
     @PUT("/api/trash-areas/update-status/{id}")
-    Call<TrashArea> updateTrashAreaStatus(@Path("id") int id, @Body TrashArea trashArea);
+    Call<TrashArea> updateTrashAreaStatus(@Header("Authorization") String authorization,
+                                          @Path("id") int id,
+                                          @Body TrashArea trashArea);
 }

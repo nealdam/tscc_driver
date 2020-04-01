@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
@@ -44,6 +48,29 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        getJWTAndSavetoSharedPreference();
     }
 
+    private void getJWTAndSavetoSharedPreference() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        SharedPreferences sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (user != null) {
+            user.getIdToken(true)
+                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+                            if (task.isSuccessful()) {
+                                String token = task.getResult().getToken();
+                                token  = "Bearer " + token;
+                                editor.putString("token", token);
+                                editor.commit();
+                            } else {
+                                Log.d(TAG, task.getException().getMessage());
+                            }
+                        }
+                    });
+        }
+    }
 }

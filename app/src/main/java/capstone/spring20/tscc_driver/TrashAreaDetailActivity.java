@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -28,6 +29,7 @@ public class TrashAreaDetailActivity extends AppCompatActivity {
     String trashAreaId;
     int STATUS_DONE_CODE = 4, STATUS_CANCELED_CODE = 3;
     EditText mTrashType, mTrashSize, mTrashWidth;
+    String token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +38,7 @@ public class TrashAreaDetailActivity extends AppCompatActivity {
         //lấy trashArea obj từ server
         trashAreaId = getIntent().getStringExtra("trashAreaId");
         if (trashAreaId != null) {
-            Call<TrashArea> call = client.getTrashAreaById(Integer.parseInt(trashAreaId));
+            Call<TrashArea> call = client.getTrashAreaById(token, Integer.parseInt(trashAreaId));
             call.enqueue(new Callback<TrashArea>() {
                 @Override
                 public void onResponse(Call<TrashArea> call, Response<TrashArea> response) {
@@ -63,6 +65,8 @@ public class TrashAreaDetailActivity extends AppCompatActivity {
     }
 
     public void setupBasic() {
+        SharedPreferences sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
+        token = sharedPreferences.getString("token", "");
         client = ApiController.getTsccDriverClient();
         mDone = findViewById(R.id.btnDone);
         mReport = findViewById(R.id.btnReport);
@@ -86,7 +90,7 @@ public class TrashAreaDetailActivity extends AppCompatActivity {
     private void updateTrashAreaStatus(final int statusCode) {
         if (trashArea != null && trashAreaId != null) {
             trashArea.setStatus(statusCode);
-            Call<TrashArea> call = client.updateTrashAreaStatus(Integer.parseInt(trashAreaId), trashArea);
+            Call<TrashArea> call = client.updateTrashAreaStatus(token, Integer.parseInt(trashAreaId), trashArea);
             call.enqueue(new Callback<TrashArea>() {
                 @Override
                 public void onResponse(Call<TrashArea> call, Response<TrashArea> response) {
