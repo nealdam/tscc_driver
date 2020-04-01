@@ -53,9 +53,7 @@ public class NotificationActivity extends AppCompatActivity {
                     intent.putExtra("routeNotification", routeNotification);
                     startActivity(intent);
                 } else {
-                    Intent intent = new Intent(NotificationActivity.this, RouteHistoryActivity.class);
-                    intent.putExtra("routeNotification", routeNotification);
-                    startActivity(intent);
+                    Toast.makeText(NotificationActivity.this, "Mission complete", Toast.LENGTH_SHORT).show();
                 }
             }
         });

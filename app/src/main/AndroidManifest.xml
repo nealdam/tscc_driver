@@ -16,7 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".RouteHistoryActivity"></activity>
 
         <service
             android:name=".firebase.FirebaseMessagingService"
