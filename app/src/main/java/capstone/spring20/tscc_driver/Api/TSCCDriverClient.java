@@ -19,4 +19,7 @@ public interface TSCCDriverClient {
     Call<TrashArea> updateTrashAreaStatus(@Header("Authorization") String authorization,
                                           @Path("id") int id,
                                           @Body TrashArea trashArea);
+
+    @POST("/api/employees/update/{email}/{token}")
+    Call<Employee> updateFCMToken(@Path("email") String email, @Path("token") String token);
 }

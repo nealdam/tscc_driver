@@ -5,29 +5,29 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 
+import capstone.spring20.tscc_driver.Api.ApiController;
+import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
 import capstone.spring20.tscc_driver.MainActivity;
 import capstone.spring20.tscc_driver.R;
-import capstone.spring20.tscc_driver.RouteActivity;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
     String TAG = "FirebaseMessagingService";
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "onMessageReceived: ");
@@ -49,10 +49,26 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     }
 
 
-
     @Override
     public void onNewToken(String s) {
         Log.d(TAG, "onNewToken: " + s);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String email = user.getEmail();
+            TSCCDriverClient client = ApiController.getTsccDriverClient();
+            Call<Employee> call = client.updateFCMToken(email, s);
+            call.enqueue(new Callback<Employee>() {
+                @Override
+                public void onResponse(Call<Employee> call, Response<Employee> response) {
+                }
+
+                @Override
+                public void onFailure(Call<Employee> call, Throwable t) {
+                }
+            });
+        }
+
     }
 
     private void sendNotification(String title, String messageBody) {
