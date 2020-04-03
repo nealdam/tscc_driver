@@ -19,6 +19,13 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import capstone.spring20.tscc_driver.Api.ApiController;
+import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
+import capstone.spring20.tscc_driver.entity.Employee;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     String TAG = "MainActivity";
@@ -28,18 +35,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //log lại fcm token
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful())
-                            Log.d(TAG, "get fcm token fail");
-                        String token = task.getResult().getToken();
-                        Log.d(TAG, "fcm token: " + token);
-                    }
-                });
-
+        
         mNotification = findViewById(R.id.btnNotification);
         mNotification.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +46,35 @@ public class MainActivity extends AppCompatActivity {
         });
 
         getJWTAndSavetoSharedPreference();
+        sendFCMTokentoServer();
+    }
+
+    private void sendFCMTokentoServer() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                            if (!task.isSuccessful())
+                                Log.d(TAG, "get fcm token fail");
+                            String token = task.getResult().getToken();
+                            Log.d(TAG, "fcm token: " + token);
+                            String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                            TSCCDriverClient client = ApiController.getTsccDriverClient();
+                            Call<Employee> call = client.updateFCMToken(email, token);
+                            call.enqueue(new Callback<Employee>() {
+                                @Override
+                                public void onResponse(Call<Employee> call, Response<Employee> response) {
+                                }
+                                @Override
+                                public void onFailure(Call<Employee> call, Throwable t) {
+                                }
+                            });
+                        }
+                    });
+
+        }
     }
 
     private void getJWTAndSavetoSharedPreference() {

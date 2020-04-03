@@ -54,6 +54,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     int STATUS_DONE_CODE = 4, STATUS_CANCELED_CODE = 3;
     Button mComplete;
     RouteNotification routeNotification;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

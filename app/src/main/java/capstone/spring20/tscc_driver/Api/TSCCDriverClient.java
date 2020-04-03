@@ -1,5 +1,6 @@
 package capstone.spring20.tscc_driver.Api;
 
+import capstone.spring20.tscc_driver.entity.Employee;
 import capstone.spring20.tscc_driver.entity.TrashArea;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -20,6 +21,6 @@ public interface TSCCDriverClient {
                                           @Path("id") int id,
                                           @Body TrashArea trashArea);
 
-    @POST("/api/employees/update/{email}/{token}")
+    @POST("/api/employees/{email}/{token}")
     Call<Employee> updateFCMToken(@Path("email") String email, @Path("token") String token);
 }

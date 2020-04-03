@@ -20,10 +20,12 @@ import capstone.spring20.tscc_driver.Api.ApiController;
 import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
 import capstone.spring20.tscc_driver.MainActivity;
 import capstone.spring20.tscc_driver.R;
+import capstone.spring20.tscc_driver.entity.Employee;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
     String TAG = "FirebaseMessagingService";
@@ -62,7 +64,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 @Override
                 public void onResponse(Call<Employee> call, Response<Employee> response) {
                 }
-
                 @Override
                 public void onFailure(Call<Employee> call, Throwable t) {
                 }
