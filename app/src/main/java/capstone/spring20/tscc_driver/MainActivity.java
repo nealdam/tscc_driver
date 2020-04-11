@@ -30,12 +30,13 @@ public class MainActivity extends AppCompatActivity {
 
     String TAG = "MainActivity";
     Button mNotification;
+    String jwtToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
         mNotification = findViewById(R.id.btnNotification);
         mNotification.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,11 +59,11 @@ public class MainActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<InstanceIdResult> task) {
                             if (!task.isSuccessful())
                                 Log.d(TAG, "get fcm token fail");
-                            String token = task.getResult().getToken();
-                            Log.d(TAG, "fcm token: " + token);
+                            String fcmToken = task.getResult().getToken();
+                            Log.d(TAG, "fcm token: " + fcmToken);
                             String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
                             TSCCDriverClient client = ApiController.getTsccDriverClient();
-                            Call<Employee> call = client.updateFCMToken(email, token);
+                            Call<Employee> call = client.updateFCMToken(jwtToken, email, fcmToken);
                             call.enqueue(new Callback<Employee>() {
                                 @Override
                                 public void onResponse(Call<Employee> call, Response<Employee> response) {
@@ -87,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<GetTokenResult> task) {
                             if (task.isSuccessful()) {
-                                String token = task.getResult().getToken();
-                                token  = "Bearer " + token;
-                                editor.putString("token", token);
+                                jwtToken = task.getResult().getToken();
+                                jwtToken  = "Bearer " + jwtToken;
+                                editor.putString("token", jwtToken);
                                 editor.commit();
                             } else {
                                 Log.d(TAG, task.getException().getMessage());

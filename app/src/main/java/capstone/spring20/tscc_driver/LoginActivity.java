@@ -61,8 +61,9 @@ public class LoginActivity extends AppCompatActivity {
         String waypoints = mainIntent.getStringExtra("waypoints");
         String locations = mainIntent.getStringExtra("locations");
         String trashAreaIdList = mainIntent.getStringExtra("trashAreaIdList");
+        String collectJobId = mainIntent.getStringExtra("collectJobId");
 
-        RouteNotification route = new RouteNotification(origin, destination, waypoints, locations, trashAreaIdList);
+        RouteNotification route = new RouteNotification(origin, destination, waypoints, locations, trashAreaIdList, collectJobId);
 
         MyDatabaseHelper db = new MyDatabaseHelper(this);
         db.addRouteNotification(route);

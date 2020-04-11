@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class RouteNotification implements Serializable, Comparable<RouteNotification> {
     int id;
-    String origin, destination, waypoints, locations, trashAreaIdList;
+    String origin, destination, waypoints, locations, trashAreaIdList, collectJobId;
     Date receivedDate;
     boolean active;
 
@@ -19,12 +19,13 @@ public class RouteNotification implements Serializable, Comparable<RouteNotifica
         this.active = active;
     }
 
-    public RouteNotification(String origin, String destination, String waypoints, String locations, String trashAreaIdList) {
+    public RouteNotification(String origin, String destination, String waypoints, String locations, String trashAreaIdList, String collectJobId) {
         this.origin = origin;
         this.destination = destination;
         this.waypoints = waypoints;
         this.locations = locations;
         this.trashAreaIdList = trashAreaIdList;
+        this.collectJobId = collectJobId;
     }
 
     public RouteNotification(int id, String origin, String destination, String waypoints, String locations, String trashAreaIdList, Date receivedDate) {
@@ -37,6 +38,14 @@ public class RouteNotification implements Serializable, Comparable<RouteNotifica
         this.receivedDate = receivedDate;
     }
     public RouteNotification() {
+    }
+
+    public String getCollectJobId() {
+        return collectJobId;
+    }
+
+    public void setCollectJobId(String collectJobId) {
+        this.collectJobId = collectJobId;
     }
 
     public int getId() {

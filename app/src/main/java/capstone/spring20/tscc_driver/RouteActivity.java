@@ -7,13 +7,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -33,18 +33,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import capstone.spring20.tscc_driver.Api.ApiController;
+import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
-import capstone.spring20.tscc_driver.entity.TrashArea;
 import capstone.spring20.tscc_driver.util.LocationUtil;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
-import okhttp3.Route;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RouteActivity extends FragmentActivity implements OnMapReadyCallback {
 
     String TAG = "RouteActivity";
 
     private GoogleMap mMap;
-    String originString, destinationString, waypointsString, locationsString, trashAreaIdListString;
+    String originString, destinationString, waypointsString, locationsString, trashAreaIdListString, collectJobId;
     LatLng origin, destination;
     List<LatLng> waypoints, locations;
     String[] trashIdArray;
@@ -54,6 +57,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     int STATUS_DONE_CODE = 4, STATUS_CANCELED_CODE = 3;
     Button mComplete;
     RouteNotification routeNotification;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,9 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
+
         getDataFromNotificationMessage();
 
         mComplete = findViewById(R.id.btnComplete);
@@ -75,6 +82,21 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
                     MyDatabaseHelper db = new MyDatabaseHelper(RouteActivity.this);
                     db.deactiveRouteNotification(routeNotification.getId());
                 }
+                //update collectJob status thành DONE
+                TSCCDriverClient client = ApiController.getTsccDriverClient();
+                String token = sharedPreferences.getString("token", "");
+                Call<String> call = client.completeCollectJob(token, Integer.parseInt(collectJobId));
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        Toast.makeText(RouteActivity.this, "update CollectJob Success", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Toast.makeText(RouteActivity.this, "update CollectJob Fail", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 //quay lại màn hình trước
                 Intent intent = new Intent(RouteActivity.this, NotificationActivity.class);
                 startActivity(intent);
@@ -128,6 +150,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         waypointsString = routeNotification.getWaypoints();
         locationsString = routeNotification.getLocations();
         trashAreaIdListString = routeNotification.getTrashAreaIdList();
+        collectJobId = routeNotification.getCollectJobId();
         //convert location string to latLng
         origin = LocationUtil.stringToLatLng(originString);
         destination = LocationUtil.stringToLatLng(destinationString);

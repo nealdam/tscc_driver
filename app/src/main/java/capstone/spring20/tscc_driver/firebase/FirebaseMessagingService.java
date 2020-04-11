@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
 
@@ -41,8 +42,10 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             String waypoints = data.get("waypoints");
             String locations = data.get("locations");
             String trashAreaIdList = data.get("trashAreaIdList");
+            String collectJobId = data.get("collectJobId");
 
-            RouteNotification route = new RouteNotification(origin, destination, waypoints, locations, trashAreaIdList);
+
+            RouteNotification route = new RouteNotification(origin, destination, waypoints, locations, trashAreaIdList, collectJobId);
 
             MyDatabaseHelper db = new MyDatabaseHelper(this);
             db.addRouteNotification(route);
@@ -59,7 +62,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         if (user != null) {
             String email = user.getEmail();
             TSCCDriverClient client = ApiController.getTsccDriverClient();
-            Call<Employee> call = client.updateFCMToken(email, s);
+            SharedPreferences sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
+            String token = sharedPreferences.getString("token", "");
+            Call<Employee> call = client.updateFCMToken(token, email, s);
             call.enqueue(new Callback<Employee>() {
                 @Override
                 public void onResponse(Call<Employee> call, Response<Employee> response) {

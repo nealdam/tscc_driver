@@ -13,10 +13,19 @@ public class TrashArea {
     private Integer id;
     @SerializedName("latitude")
     @Expose
-    private Integer latitude;
+    private Double latitude;
     @SerializedName("longitude")
     @Expose
-    private Integer longitude;
+    private Double longitude;
+    @SerializedName("street")
+    @Expose
+    private String street;
+    @SerializedName("district")
+    @Expose
+    private String district;
+    @SerializedName("city")
+    @Expose
+    private String city;
     @SerializedName("numberOfRequest")
     @Expose
     private Integer numberOfRequest;
@@ -52,20 +61,44 @@ public class TrashArea {
         this.id = id;
     }
 
-    public Integer getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Integer latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public Integer getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Integer longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public Integer getNumberOfRequest() {
@@ -104,8 +137,8 @@ public class TrashArea {
         return status;
     }
 
-    public void setStatus(int statusCode) {
-        this.status.setId(statusCode);
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getCreateAt() {
@@ -116,8 +149,7 @@ public class TrashArea {
         this.createAt = createAt;
     }
 
-
-    public class Status {
+    public class Width {
 
         @SerializedName("id")
         @Expose
@@ -141,34 +173,8 @@ public class TrashArea {
         public void setName(String name) {
             this.name = name;
         }
-
     }
     public class Type {
-
-        @SerializedName("id")
-        @Expose
-        private Integer id;
-        @SerializedName("name")
-        @Expose
-        private String name;
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
-    public class Width {
 
         @SerializedName("id")
         @Expose

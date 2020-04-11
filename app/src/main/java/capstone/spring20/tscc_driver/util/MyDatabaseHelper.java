@@ -28,6 +28,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     String COLUMN_ROUTE_TRASHAREAIDLIST = "trash_area_id_list";
     String COLUMN_ROUTE_RECEIVEDDATE = "received_date";
     String COLUMN_ROUTE_ACTIVE = "active";
+    String COLUMN_ROUTE_COLLECTJOBID = "collect_job_id";
 
 
     public MyDatabaseHelper(Context context) {
@@ -45,7 +46,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_ROUTE_LOCATIONS + " TEXT,"
                 + COLUMN_ROUTE_TRASHAREAIDLIST + " TEXT,"
                 + COLUMN_ROUTE_RECEIVEDDATE + " TEXT,"
-                + COLUMN_ROUTE_ACTIVE + " TEXT)"; //https://www.sqlite.org/draft/lang_datefunc.html
+                + COLUMN_ROUTE_ACTIVE + " TEXT,"
+                + COLUMN_ROUTE_COLLECTJOBID + " TEXT)";
         db.execSQL(sql);
     }
 
@@ -80,6 +82,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 route.setTrashAreaIdList(cursor.getString(5));
                 route.setReceivedDate(DatetimeUtil.toDate(cursor.getString(6)));
                 route.setActive(BooleanUtil.toBoolean(cursor.getString(7)));
+                route.setCollectJobId(cursor.getString(8));
 
                 list.add(route);
             } while (cursor.moveToNext());
@@ -104,6 +107,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_ROUTE_TRASHAREAIDLIST, route.getTrashAreaIdList());
         values.put(COLUMN_ROUTE_RECEIVEDDATE, DatetimeUtil.getCurrentDatetime());
         values.put(COLUMN_ROUTE_ACTIVE, "1");// active = true
+        values.put(COLUMN_ROUTE_COLLECTJOBID, route.getCollectJobId());
 
         db.insert(TABLE_NAME, null, values);
         db.close();
