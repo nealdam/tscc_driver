@@ -16,6 +16,7 @@ import capstone.spring20.tscc_driver.Api.ApiController;
 import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
 import capstone.spring20.tscc_driver.entity.Status;
 import capstone.spring20.tscc_driver.entity.TrashArea;
+import capstone.spring20.tscc_driver.util.ParseUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,7 +38,7 @@ public class TrashAreaDetailActivity extends AppCompatActivity {
         //lấy trashArea obj từ server
         trashAreaId = getIntent().getStringExtra("trashAreaId");
         if (trashAreaId != null) {
-            Call<TrashArea> call = client.getTrashAreaById(token, Integer.parseInt(trashAreaId));
+            Call<TrashArea> call = client.getTrashAreaById(token, ParseUtil.tryParseStringtoInt(trashAreaId, 0));
             call.enqueue(new Callback<TrashArea>() {
                 @Override
                 public void onResponse(Call<TrashArea> call, Response<TrashArea> response) {

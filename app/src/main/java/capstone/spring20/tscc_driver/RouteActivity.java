@@ -1,8 +1,5 @@
 package capstone.spring20.tscc_driver;
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -17,6 +14,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -45,8 +45,6 @@ import retrofit2.Response;
 public class RouteActivity extends FragmentActivity implements OnMapReadyCallback {
 
     String TAG = "RouteActivity";
-
-    private GoogleMap mMap;
     String originString, destinationString, waypointsString, locationsString, trashAreaIdListString, collectJobId;
     LatLng origin, destination;
     List<LatLng> waypoints, locations;
@@ -58,6 +56,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     Button mComplete;
     RouteNotification routeNotification;
     SharedPreferences sharedPreferences;
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +88,10 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        Toast.makeText(RouteActivity.this, "update CollectJob Success", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-                        Toast.makeText(RouteActivity.this, "update CollectJob Fail", Toast.LENGTH_SHORT).show();
                     }
                 });
                 //quay lại màn hình trước
@@ -142,7 +139,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         });
     }
 
-    public void getDataFromNotificationMessage(){
+    public void getDataFromNotificationMessage() {
         //get data from notification messsage
         routeNotification = (RouteNotification) getIntent().getSerializableExtra("routeNotification");
         originString = routeNotification.getOrigin();
@@ -180,6 +177,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
                 intent.putExtra("trashAreaId", marker.getTitle());
                 startActivityForResult(intent, 1);
                 return true;
+
             }
         });
         // Add markers in locations and move the camera
