@@ -46,7 +46,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        getJWTAndSavetoSharedPreference();
+
+        //get jwt from sharedPreferences
+        SharedPreferences sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
+        jwtToken = sharedPreferences.getString("token", "");
+
         sendFCMTokentoServer();
     }
 
@@ -59,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<InstanceIdResult> task) {
                             if (!task.isSuccessful())
                                 Log.d(TAG, "get fcm token fail");
+
                             String fcmToken = task.getResult().getToken();
-                            Log.d(TAG, "fcm token: " + fcmToken);
                             String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
                             TSCCDriverClient client = ApiController.getTsccDriverClient();
                             Call<Employee> call = client.updateFCMToken(jwtToken, email, fcmToken);
@@ -78,25 +82,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void getJWTAndSavetoSharedPreference() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        SharedPreferences sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (user != null) {
-            user.getIdToken(true)
-                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-                            if (task.isSuccessful()) {
-                                jwtToken = task.getResult().getToken();
-                                jwtToken  = "Bearer " + jwtToken;
-                                editor.putString("token", jwtToken);
-                                editor.commit();
-                            } else {
-                                Log.d(TAG, task.getException().getMessage());
-                            }
-                        }
-                    });
-        }
-    }
 }
