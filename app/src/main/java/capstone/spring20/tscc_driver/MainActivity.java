@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.nav_trash_route:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new MapsActivity()).commit();
+                        new RouteFragment()).commit();
                 break;
             case R.id.nav_notification:
                 Intent intent = new Intent(MainActivity.this, NotificationActivity.class);

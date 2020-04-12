@@ -20,8 +20,8 @@
 
     <item android:title="Thông tin hổ trợ">
         <menu>
-            <item android:title="Điện thoại hổ trợ" />
-            <item android:title="Điện thoại hổ trợ" />
+            <item android:title="Điện thoại hỗ trợ" />
+            <item android:title="Điện thoại hỗ trợ" />
         </menu>
     </item>
 </menu>
