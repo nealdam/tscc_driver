@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
 public class NotificationActivity extends AppCompatActivity {
 
     ListView listView;
+    Button btnBack;
     List<RouteNotification> routeList = new ArrayList<>();
     ArrayAdapter<RouteNotification> routeListAdapter;
     MyDatabaseHelper db = new MyDatabaseHelper(this);
@@ -29,6 +31,14 @@ public class NotificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
+
+        btnBack = findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NotificationActivity.this.onBackPressed();
+            }
+        });
 
         setupBasic();
 

@@ -1,6 +1,8 @@
 package capstone.spring20.tscc_driver;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
@@ -14,7 +16,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -39,7 +43,7 @@ import capstone.spring20.tscc_driver.util.LocationUtil;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
 import okhttp3.Route;
 
-public class RouteActivity extends FragmentActivity implements OnMapReadyCallback {
+public class RouteActivity extends Fragment implements OnMapReadyCallback {
 
     String TAG = "RouteActivity";
 
@@ -55,8 +59,44 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     Button mComplete;
     RouteNotification routeNotification;
 
+    private FragmentActivity myContext;
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) myContext.getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        locationManager = (LocationManager) myContext.getSystemService(Context.LOCATION_SERVICE);
+        getDataFromNotificationMessage();
+
+        mComplete = myContext.findViewById(R.id.btnComplete);
+        mComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //update property Active = false
+                if (routeNotification != null) {
+                    MyDatabaseHelper db = new MyDatabaseHelper(myContext);
+                    db.deactiveRouteNotification(routeNotification.getId());
+                }
+                //quay lại màn hình trước
+                Intent intent = new Intent(myContext, NotificationActivity.class);
+                startActivity(intent);
+                myContext.finish();
+            }
+        });
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        myContext = (FragmentActivity) context;
+        super.onAttach(context);
+    }
+
+/*    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -81,10 +121,10 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
                 finish();
             }
         });
-    }
+    }*/
 
     private void updateLocationOnChange() {
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (myContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && myContext.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    Activity#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -97,7 +137,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Toast.makeText(RouteActivity.this, "location change", Toast.LENGTH_SHORT).show();
+                Toast.makeText(myContext, "location change", Toast.LENGTH_SHORT).show();
                 LatLng l = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(l));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
@@ -122,7 +162,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
 
     public void getDataFromNotificationMessage(){
         //get data from notification messsage
-        routeNotification = (RouteNotification) getIntent().getSerializableExtra("routeNotification");
+        routeNotification = (RouteNotification) myContext.getIntent().getSerializableExtra("routeNotification");
         originString = routeNotification.getOrigin();
         destinationString = routeNotification.getDestination();
         waypointsString = routeNotification.getWaypoints();
@@ -150,28 +190,28 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        /*mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) { // click marker để show trash area detail
-                Intent intent = new Intent(RouteActivity.this, TrashAreaDetailActivity.class);
+                Intent intent = new Intent(myContext, TrashAreaDetailActivity.class);
                 intent.putExtra("trashAreaId", marker.getTitle());
                 startActivityForResult(intent, 1);
                 return true;
             }
-        });
+        });*/
         // Add markers in locations and move the camera
-        mMap.addMarker(new MarkerOptions()
+        /*mMap.addMarker(new MarkerOptions()
                 .position(origin)
                 .title("begin")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));*/
         mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
-        mMap.addMarker(new MarkerOptions()
+        /*mMap.addMarker(new MarkerOptions()
                 .position(destination)
                 .title("end")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));*/
         // tạo marker cho trash area
-        for (int i = 0; i < waypoints.size(); i++) {
+        /*for (int i = 0; i < waypoints.size(); i++) {
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(waypoints.get(i))
                     .title(trashIdArray[i]) // gán trash id vô marker title
@@ -182,11 +222,11 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         polylineOptions.addAll(locations);
         Polyline line = mMap.addPolyline(polylineOptions);
         line.setWidth(5);
-        line.setColor(Color.BLUE);
+        line.setColor(Color.BLUE);*/
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             int result = data.getIntExtra("result", -1);
@@ -205,7 +245,7 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
             }
 
         } else {
-            Toast.makeText(this, "something went wrong", Toast.LENGTH_SHORT).show();
+            Toast.makeText(myContext, "something went wrong", Toast.LENGTH_SHORT).show();
         }
     }
 
