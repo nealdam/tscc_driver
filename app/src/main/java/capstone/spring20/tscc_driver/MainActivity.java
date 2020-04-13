@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // set default fragment
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new test()).commit();
+                    new RouteFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_trash_route);
         }
 

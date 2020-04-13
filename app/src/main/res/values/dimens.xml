@@ -2,6 +2,7 @@
 <resources>
     <dimen name="txt1">40sp</dimen>
     <dimen name="txt2">30sp</dimen>
+    <dimen name="txt2_5">20sp</dimen>
     <dimen name="txt3">15sp</dimen>
 
     <dimen name="btn3">200dp</dimen>
@@ -16,6 +17,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
-    <dimen name="nav_header_height">240dp</dimen>
+    <dimen name="nav_header_height">265dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 </resources>
