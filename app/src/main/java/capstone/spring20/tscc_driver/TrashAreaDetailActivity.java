@@ -7,16 +7,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import capstone.spring20.tscc_driver.Api.ApiController;
 import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
+import capstone.spring20.tscc_driver.entity.Status;
 import capstone.spring20.tscc_driver.entity.TrashArea;
+import capstone.spring20.tscc_driver.util.ParseUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,7 +38,7 @@ public class TrashAreaDetailActivity extends AppCompatActivity {
         //lấy trashArea obj từ server
         trashAreaId = getIntent().getStringExtra("trashAreaId");
         if (trashAreaId != null) {
-            Call<TrashArea> call = client.getTrashAreaById(token, Integer.parseInt(trashAreaId));
+            Call<TrashArea> call = client.getTrashAreaById(token, ParseUtil.tryParseStringtoInt(trashAreaId, 0));
             call.enqueue(new Callback<TrashArea>() {
                 @Override
                 public void onResponse(Call<TrashArea> call, Response<TrashArea> response) {
@@ -89,7 +89,9 @@ public class TrashAreaDetailActivity extends AppCompatActivity {
 
     private void updateTrashAreaStatus(final int statusCode) {
         if (trashArea != null && trashAreaId != null) {
-            trashArea.setStatus(statusCode);
+            Status status = new Status();
+            status.setId(statusCode);
+            trashArea.setStatus(status);
             Call<TrashArea> call = client.updateTrashAreaStatus(token, Integer.parseInt(trashAreaId), trashArea);
             call.enqueue(new Callback<TrashArea>() {
                 @Override

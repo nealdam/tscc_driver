@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String TAG = "MainActivity";
     Button mNotification;
     private DrawerLayout drawer;
+    String jwtToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setCheckedItem(R.id.nav_trash_route);
         }
 
-        getJWTAndSavetoSharedPreference();
+
+        //get jwt from sharedPreferences
+        SharedPreferences sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
+        jwtToken = sharedPreferences.getString("token", "");
+
         sendFCMTokentoServer();
     }
 
@@ -84,11 +89,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         public void onComplete(@NonNull Task<InstanceIdResult> task) {
                             if (!task.isSuccessful())
                                 Log.d(TAG, "get fcm token fail");
-                            String token = task.getResult().getToken();
-                            Log.d(TAG, "fcm token: " + token);
+
+                            String fcmToken = task.getResult().getToken();
                             String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
                             TSCCDriverClient client = ApiController.getTsccDriverClient();
-                            Call<Employee> call = client.updateFCMToken(email, token);
+                            Call<Employee> call = client.updateFCMToken(jwtToken, email, fcmToken);
                             call.enqueue(new Callback<Employee>() {
                                 @Override
                                 public void onResponse(Call<Employee> call, Response<Employee> response) {

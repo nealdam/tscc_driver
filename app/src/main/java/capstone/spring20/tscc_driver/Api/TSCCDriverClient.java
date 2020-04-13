@@ -14,13 +14,19 @@ public interface TSCCDriverClient {
 
     @GET("/api/trash-areas/{id}")
     Call<TrashArea> getTrashAreaById(@Header("Authorization") String authorization,
-                                    @Path("id") int id);
+                                     @Path("id") int id);
 
     @PUT("/api/trash-areas/update-status/{id}")
     Call<TrashArea> updateTrashAreaStatus(@Header("Authorization") String authorization,
                                           @Path("id") int id,
                                           @Body TrashArea trashArea);
 
-    @POST("/api/employees/{email}/{token}")
-    Call<Employee> updateFCMToken(@Path("email") String email, @Path("token") String token);
+    @GET("/api/employees/{email}/{token}")
+    Call<Employee> updateFCMToken(@Header("Authorization") String authorization,
+                                  @Path("email") String email, @Path("token") String token);
+
+    @GET("/api/collect-jobs/complete/{id}")
+    Call<String> completeCollectJob(@Header("Authorization") String authorization,
+                                    @Path("id") int id);
+
 }

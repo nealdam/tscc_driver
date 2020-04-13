@@ -9,6 +9,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -21,6 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,18 +41,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import capstone.spring20.tscc_driver.Api.ApiController;
+import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
-import capstone.spring20.tscc_driver.entity.TrashArea;
 import capstone.spring20.tscc_driver.util.LocationUtil;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
-import okhttp3.Route;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RouteActivity extends Fragment implements OnMapReadyCallback {
 
     String TAG = "RouteActivity";
-
-    private GoogleMap mMap;
-    String originString, destinationString, waypointsString, locationsString, trashAreaIdListString;
+    String originString, destinationString, waypointsString, locationsString, trashAreaIdListString, collectJobId;
     LatLng origin, destination;
     List<LatLng> waypoints, locations;
     String[] trashIdArray;
@@ -58,6 +63,8 @@ public class RouteActivity extends Fragment implements OnMapReadyCallback {
     int STATUS_DONE_CODE = 4, STATUS_CANCELED_CODE = 3;
     Button mComplete;
     RouteNotification routeNotification;
+    SharedPreferences sharedPreferences;
+    private GoogleMap mMap;
 
     private FragmentActivity myContext;
 
@@ -104,6 +111,9 @@ public class RouteActivity extends Fragment implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
+
         getDataFromNotificationMessage();
 
         mComplete = findViewById(R.id.btnComplete);
@@ -115,6 +125,19 @@ public class RouteActivity extends Fragment implements OnMapReadyCallback {
                     MyDatabaseHelper db = new MyDatabaseHelper(RouteActivity.this);
                     db.deactiveRouteNotification(routeNotification.getId());
                 }
+                //update collectJob status thành DONE
+                TSCCDriverClient client = ApiController.getTsccDriverClient();
+                String token = sharedPreferences.getString("token", "");
+                Call<String> call = client.completeCollectJob(token, Integer.parseInt(collectJobId));
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                    }
+                });
                 //quay lại màn hình trước
                 Intent intent = new Intent(RouteActivity.this, NotificationActivity.class);
                 startActivity(intent);
@@ -160,7 +183,7 @@ public class RouteActivity extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    public void getDataFromNotificationMessage(){
+    public void getDataFromNotificationMessage() {
         //get data from notification messsage
         routeNotification = (RouteNotification) myContext.getIntent().getSerializableExtra("routeNotification");
         originString = routeNotification.getOrigin();
@@ -168,6 +191,7 @@ public class RouteActivity extends Fragment implements OnMapReadyCallback {
         waypointsString = routeNotification.getWaypoints();
         locationsString = routeNotification.getLocations();
         trashAreaIdListString = routeNotification.getTrashAreaIdList();
+        collectJobId = routeNotification.getCollectJobId();
         //convert location string to latLng
         origin = LocationUtil.stringToLatLng(originString);
         destination = LocationUtil.stringToLatLng(destinationString);
@@ -197,6 +221,7 @@ public class RouteActivity extends Fragment implements OnMapReadyCallback {
                 intent.putExtra("trashAreaId", marker.getTitle());
                 startActivityForResult(intent, 1);
                 return true;
+
             }
         });*/
         // Add markers in locations and move the camera
