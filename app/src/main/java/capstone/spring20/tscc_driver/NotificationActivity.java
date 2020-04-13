@@ -1,7 +1,5 @@
 package capstone.spring20.tscc_driver;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +9,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -60,7 +59,7 @@ public class NotificationActivity extends AppCompatActivity {
                 boolean isActive = routeNotification.isActive();
                 if (isActive) {
                     Intent intent = new Intent(NotificationActivity.this, RouteActivity.class);
-                    intent.putExtra("routeNotification", routeNotification);
+                    intent.putExtra("route", routeNotification);
                     startActivity(intent);
                 } else {
                     Toast.makeText(NotificationActivity.this, "Mission complete", Toast.LENGTH_SHORT).show();

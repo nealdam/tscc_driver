@@ -77,30 +77,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             route.setTrashAreaIdList(cursor.getString(5));
             route.setReceivedDate(DatetimeUtil.toDate(cursor.getString(6)));
             route.setActive(BooleanUtil.toBoolean(cursor.getString(7)));
-        }
-
-        cursor.close();
-        db.close();
-
-        return route;
-    }
-    public RouteNotification getActiveRouteNotification(){
-        RouteNotification route = null;
-
-        String sql = "SELECT * FROM " + TABLE_NAME
-                + " ORDER BY " + COLUMN_ROUTE_RECEIVEDDATE + " DESC LIMIT 1";
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(sql, null);
-        if (cursor.moveToFirst()) {
-            route = new RouteNotification();
-            route.setId(cursor.getInt(0));
-            route.setOrigin(cursor.getString(1));
-            route.setDestination(cursor.getString(2));
-            route.setWaypoints(cursor.getString(3));
-            route.setLocations(cursor.getString(4));
-            route.setTrashAreaIdList(cursor.getString(5));
-            route.setReceivedDate(DatetimeUtil.toDate(cursor.getString(6)));
-            route.setActive(BooleanUtil.toBoolean(cursor.getString(7)));
             route.setCollectJobId(cursor.getString(8));
         }
 

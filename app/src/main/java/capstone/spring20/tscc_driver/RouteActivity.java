@@ -11,20 +11,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,22 +28,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import capstone.spring20.tscc_driver.Api.ApiController;
-import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
 import capstone.spring20.tscc_driver.util.LocationUtil;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class RouteActivity extends Fragment implements OnMapReadyCallback {
 
@@ -62,7 +50,7 @@ public class RouteActivity extends Fragment implements OnMapReadyCallback {
     Map<Integer, Marker> markerDict = new HashMap<>();
     int STATUS_DONE_CODE = 4, STATUS_CANCELED_CODE = 3;
     Button mComplete;
-    RouteNotification routeNotification;
+    RouteNotification route;
     SharedPreferences sharedPreferences;
     private GoogleMap mMap;
 
@@ -83,9 +71,9 @@ public class RouteActivity extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 //update property Active = false
-                if (routeNotification != null) {
+                if (route != null) {
                     MyDatabaseHelper db = new MyDatabaseHelper(myContext);
-                    db.deactiveRouteNotification(routeNotification.getId());
+                    db.deactiveRouteNotification(route.getId());
                 }
                 //quay lại màn hình trước
                 Intent intent = new Intent(myContext, NotificationActivity.class);
@@ -121,9 +109,9 @@ public class RouteActivity extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 //update property Active = false
-                if (routeNotification != null) {
+                if (route != null) {
                     MyDatabaseHelper db = new MyDatabaseHelper(RouteActivity.this);
-                    db.deactiveRouteNotification(routeNotification.getId());
+                    db.deactiveRouteNotification(route.getId());
                 }
                 //update collectJob status thành DONE
                 TSCCDriverClient client = ApiController.getTsccDriverClient();
@@ -185,13 +173,13 @@ public class RouteActivity extends Fragment implements OnMapReadyCallback {
 
     public void getDataFromNotificationMessage() {
         //get data from notification messsage
-        routeNotification = (RouteNotification) myContext.getIntent().getSerializableExtra("routeNotification");
-        originString = routeNotification.getOrigin();
-        destinationString = routeNotification.getDestination();
-        waypointsString = routeNotification.getWaypoints();
-        locationsString = routeNotification.getLocations();
-        trashAreaIdListString = routeNotification.getTrashAreaIdList();
-        collectJobId = routeNotification.getCollectJobId();
+        route = (RouteNotification) myContext.getIntent().getSerializableExtra("route");
+        originString = route.getOrigin();
+        destinationString = route.getDestination();
+        waypointsString = route.getWaypoints();
+        locationsString = route.getLocations();
+        trashAreaIdListString = route.getTrashAreaIdList();
+        collectJobId = route.getCollectJobId();
         //convert location string to latLng
         origin = LocationUtil.stringToLatLng(originString);
         destination = LocationUtil.stringToLatLng(destinationString);
