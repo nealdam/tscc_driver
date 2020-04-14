@@ -24,7 +24,7 @@ import retrofit2.Response;
 public class TrashAreaDetailActivity extends AppCompatActivity {
 
     TrashArea trashArea;
-    Button mDone, mReport;
+    Button mDone, mReport, btnBack;
     TSCCDriverClient client;
     String trashAreaId;
     int STATUS_DONE_CODE = 4, STATUS_CANCELED_CODE = 3;
@@ -35,6 +35,14 @@ public class TrashAreaDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trash_area_detail);
         setupBasic();
+
+        btnBack = findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TrashAreaDetailActivity.this.onBackPressed();
+            }
+        });
         //lấy trashArea obj từ server
         trashAreaId = getIntent().getStringExtra("trashAreaId");
         if (trashAreaId != null) {

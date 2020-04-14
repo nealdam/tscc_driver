@@ -35,7 +35,6 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     String TAG = "MainActivity";
-    Button mNotification;
     private DrawerLayout drawer;
     String jwtToken;
 
@@ -148,8 +147,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         new RouteFragment()).commit();
                 break;
             case R.id.nav_notification:
-                Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
-                startActivity(intent);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new NotificationActivity()).commit();
                 break;
             case R.id.nav_profile:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
