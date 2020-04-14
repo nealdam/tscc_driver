@@ -119,7 +119,7 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback {
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker) { // click marker để show trash area detail
-                            Intent intent = new Intent(getActivity(), TrashAreaDetailActivity.class);
+                            Intent intent = new Intent(getActivity(), PopupActivity.class);
                             intent.putExtra("trashAreaId", marker.getTitle());
                             startActivityForResult(intent, 1);
                             return true;

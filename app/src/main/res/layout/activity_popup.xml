@@ -16,7 +16,6 @@
             android:id="@+id/txtTrashAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="123-Võ Văn Ngân"
             android:textSize="@dimen/txt3"
             android:layout_weight="1.5"/>
         <Button
@@ -36,7 +35,7 @@
         android:gravity="bottom">
 
         <Button
-            android:id="@+id/btnConfirm"
+            android:id="@+id/btnDone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
