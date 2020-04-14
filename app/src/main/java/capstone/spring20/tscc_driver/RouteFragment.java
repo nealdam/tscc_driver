@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -96,6 +95,7 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback {
         if (ContextCompat.checkSelfPermission(myContext, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             if (mMap != null) {
+                // move camera vào my current location
                 mMap.setMyLocationEnabled(true);
                 LocationManager lm = (LocationManager) myContext.getSystemService(Context.LOCATION_SERVICE);
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -151,9 +151,6 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback {
                     line.setColor(Color.BLUE);
 
 
-                } else {
-                    // TODO hiện vị trí hiện tại
-                    Toast.makeText(getActivity(), "Chưa có tuyến thu gom!", Toast.LENGTH_SHORT).show();
                 }
             }
         } else {
