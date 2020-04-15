@@ -131,8 +131,6 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback {
                             .position(origin)
                             .title("begin")
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
                     mMap.addMarker(new MarkerOptions()
                             .position(destination)
                             .title("end")
