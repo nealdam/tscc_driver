@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String TAG = "MainActivity";
     private DrawerLayout drawer;
     String jwtToken;
-
+    Button mComplete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +63,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setCheckedItem(R.id.nav_trash_route);
         }
 
+        setupBasic();
+        sendFCMTokentoServer();
+        setDriverName();
+    }
 
+    private void setupBasic() {
         //get jwt from sharedPreferences
         SharedPreferences sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
         jwtToken = sharedPreferences.getString("token", "");
 
-        sendFCMTokentoServer();
-        setDriverName();
     }
 
     private void sendFCMTokentoServer() {
