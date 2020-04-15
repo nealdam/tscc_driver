@@ -4,14 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,15 +24,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import capstone.spring20.tscc_driver.Api.ApiController;
 import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
 import capstone.spring20.tscc_driver.entity.Employee;
+import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     String TAG = "MainActivity";
     private DrawerLayout drawer;
     String jwtToken;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -95,7 +95,8 @@ public class PopupActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(PopupActivity.this, TrashAreaDetailActivity.class);
                 intent.putExtra("trashAreaId", trashAreaId);
-                startActivityForResult(intent, 1);
+                startActivity(intent);
+                finish();
             }
         });
     }

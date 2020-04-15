@@ -1,5 +1,6 @@
 package capstone.spring20.tscc_driver;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,19 +21,28 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
+import androidx.core.content.ContextCompat;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity{
 
     private static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        askPermisson();
         setContentView(R.layout.activity_login);
+
+
+
         //tạo sqlite
         MyDatabaseHelper db = new MyDatabaseHelper(this);
         Log.d(TAG, db.getDatabaseName());
@@ -63,6 +73,16 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @AfterPermissionGranted(123)
+    private void askPermisson() {
+        //ask permisson
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+        } else {
+            EasyPermissions.requestPermissions(this, "Bạn cần có vị trí để sử dụng ứng dụng.", 123, perms);
+        }
+    }
+
     private void routeNotificationHandle() {
         Intent mainIntent = getIntent();
         String origin = mainIntent.getStringExtra("origin");
@@ -84,6 +104,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(1, resultCode, data);
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+
+        }
         if (requestCode == 1) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
             // Successfully signed in
