@@ -2,6 +2,7 @@ package capstone.spring20.tscc_driver;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -40,12 +41,15 @@ import java.util.Map;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
 import capstone.spring20.tscc_driver.util.LocationUtil;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RouteFragment extends Fragment implements OnMapReadyCallback {
+public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyPermissions.PermissionCallbacks {
 
     String TAG = "RouteActivity";
     GoogleMap mMap;
@@ -73,7 +77,7 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback {
         myContext = (Activity) context;
         super.onAttach(context);
     }
-
+    @AfterPermissionGranted(123)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -81,24 +85,31 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback {
         return inflater.inflate(R.layout.fragment_route, container, false);
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SupportMapFragment mapFragment = (SupportMapFragment)
-                getChildFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
+        if (EasyPermissions.hasPermissions(getActivity(), perms)) {
+            SupportMapFragment mapFragment = (SupportMapFragment)
+                    getChildFragmentManager().findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+        } else {
+            EasyPermissions.requestPermissions(this, "Bạn cần có vị trí để sử dụng ứng dụng.", 123, perms);
+        }
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        if (ContextCompat.checkSelfPermission(myContext, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+
+            mMap = googleMap;
             if (mMap != null) {
                 // move camera vào my current location
                 mMap.setMyLocationEnabled(true);
                 LocationManager lm = (LocationManager) myContext.getSystemService(Context.LOCATION_SERVICE);
-                Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                @SuppressLint("MissingPermission") Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
                 //zoom map to my location
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
@@ -121,7 +132,7 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback {
                         public boolean onMarkerClick(Marker marker) { // click marker để show trash area detail
                             Intent intent = new Intent(getActivity(), PopupActivity.class);
                             intent.putExtra("trashAreaId", marker.getTitle());
-                            startActivityForResult(intent, 1);
+                            startActivity(intent);
                             return true;
 
                         }
@@ -152,13 +163,17 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback {
 
                 }
             }
-        } else {
-            Intent intent = new Intent(myContext,SetLocationPermisson.class);
-            startActivity(intent);
-        }
+
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+
+        }
+    }
 
     public void getDataFromNotificationMessage() {
         //get data from notification messsage
@@ -176,4 +191,22 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback {
         //convert string to array
         trashIdArray = trashAreaIdListString.split(",");
     }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
+    }
+
+    /*@Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }*/
 }

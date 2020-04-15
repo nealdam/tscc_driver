@@ -23,6 +23,7 @@ public class SetLocationPermisson extends AppCompatActivity {
                 Uri uri = Uri.fromParts("package", getPackageName(), null);
                 intent.setData(uri);
                 startActivity(intent);
+                finish();
             }
         });
     }
