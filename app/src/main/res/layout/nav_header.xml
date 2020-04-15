@@ -25,19 +25,18 @@
         android:src="@drawable/worker2" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/txtDriverName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_space"
-        android:text="Tài xế"
         android:textAlignment="center"
-        android:textSize="@dimen/txt3"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="@dimen/txt3" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tên: Dinh Vu"
+        android:text="Tài xế"
         android:textAlignment="center"
         android:textSize="@dimen/txt3" />
 

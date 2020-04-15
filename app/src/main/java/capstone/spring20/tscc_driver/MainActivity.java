@@ -1,30 +1,32 @@
 package capstone.spring20.tscc_driver;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import capstone.spring20.tscc_driver.Api.ApiController;
 import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
 import capstone.spring20.tscc_driver.entity.Employee;
-import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,15 +42,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_nav);
-        
-        /*mNotification = findViewById(R.id.btnNotification);
-        mNotification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
-                startActivity(intent);
-            }
-        });*/
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -75,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         jwtToken = sharedPreferences.getString("token", "");
 
         sendFCMTokentoServer();
+        setDriverName();
     }
 
     private void sendFCMTokentoServer() {
@@ -105,26 +99,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void getJWTAndSavetoSharedPreference() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        SharedPreferences sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (user != null) {
-            user.getIdToken(true)
-                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-                            if (task.isSuccessful()) {
-                                String token = task.getResult().getToken();
-                                token  = "Bearer " + token;
-                                editor.putString("token", token);
-                                editor.commit();
-                            } else {
-                                Log.d(TAG, task.getException().getMessage());
-                            }
-                        }
-                    });
-        }
+    private void setDriverName(){
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View head_view = navigationView.getHeaderView(0);
+        final TextView mName = head_view.findViewById(R.id.txtDriverName);
+
+        TSCCDriverClient client = ApiController.getTsccDriverClient();
+        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        Call<Employee> call = client.getDriver(jwtToken, email);
+        call.enqueue(new Callback<Employee>() {
+            @Override
+            public void onResponse(Call<Employee> call, Response<Employee> response) {
+                if (response.body() != null)
+                    mName.setText(response.body().getName());
+            }
+
+            @Override
+            public void onFailure(Call<Employee> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
@@ -148,9 +142,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new NotificationActivity()).commit();
                 break;
-            case R.id.nav_profile:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new test()).commit();
+            case R.id.nav_logout:
+                AuthUI.getInstance()
+                        .signOut(this)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
