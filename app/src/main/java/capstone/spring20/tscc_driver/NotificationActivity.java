@@ -67,12 +67,9 @@ public class NotificationActivity extends Fragment {
                 collectJobAdapter = new ArrayAdapter<>(getActivity(),
                         android.R.layout.simple_expandable_list_item_1, android.R.id.text1, collectJobList);
                 listView.setAdapter(collectJobAdapter);
-
             }
-
             @Override
             public void onFailure(Call<List<CollectJobResponse>> call, Throwable t) {
-
             }
         });
 
