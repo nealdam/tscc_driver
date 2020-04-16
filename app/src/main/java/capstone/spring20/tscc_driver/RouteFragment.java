@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
@@ -19,7 +18,6 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,12 +36,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import capstone.spring20.tscc_driver.Api.ApiController;
+import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
 import capstone.spring20.tscc_driver.util.LocationUtil;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -51,7 +56,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  */
 public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyPermissions.PermissionCallbacks {
 
-    String TAG = "RouteActivity";
+    String TAG = "RouteFragment";
     GoogleMap mMap;
     RouteNotification route;
     MyDatabaseHelper db;
@@ -67,6 +72,7 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
     Button mComplete;
     SharedPreferences sharedPreferences;
     Context myContext;
+    View rootView;
 
     public RouteFragment() {
         // Required empty public constructor
@@ -82,8 +88,14 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_route, container, false);
+        rootView = inflater.inflate(R.layout.fragment_route, container, false);
+
+        onMissionComplete();
+
+        return rootView;
     }
+
+
 
 
     @Override
@@ -204,6 +216,35 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
         }
     }
 
+    private void onMissionComplete() {
+        Button mComplete = rootView.findViewById(R.id.btnComplete);
+        mComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //deactive route
+                if (route != null) {
+                    MyDatabaseHelper db = new MyDatabaseHelper(myContext);
+                    db.deactiveRouteNotification(route.getId());
+                    //complete collectJob status
+                    sharedPreferences = myContext.getSharedPreferences("JWT", MODE_PRIVATE);
+                    String token = sharedPreferences.getString("token", "");
+                    TSCCDriverClient client = ApiController.getTsccDriverClient();
+                    Call<String> call = client.completeCollectJob(token, Integer.parseInt(collectJobId));
+                    call.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                        }
+                    });
+                }
+                //reset UI
+                mMap.clear();
+            }
+        });
+    }
     /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

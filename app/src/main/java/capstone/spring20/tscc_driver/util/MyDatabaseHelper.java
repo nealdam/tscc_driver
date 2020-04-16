@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import capstone.spring20.tscc_driver.entity.RouteNotification;
@@ -64,6 +63,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         RouteNotification route = null;
 
         String sql = "SELECT * FROM " + TABLE_NAME
+                + " WHERE " + COLUMN_ROUTE_ACTIVE + " = 1"
                 + " ORDER BY " + COLUMN_ROUTE_RECEIVEDDATE + " DESC LIMIT 1";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
@@ -135,9 +135,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void deactiveRouteNotification(int id) {
-//        String sql = "UPDATE " + TABLE_NAME + " SET "
-//                + COLUMN_ROUTE_ACTIVE + " = " + "0 "
-//                + "WHERE " + COLUMN_ROUTE_ID + " = " + id;
+        String sql = "UPDATE " + TABLE_NAME + " SET "
+                + COLUMN_ROUTE_ACTIVE + " = " + "0 "
+                + "WHERE " + COLUMN_ROUTE_ID + " = " + id;
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();

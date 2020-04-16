@@ -44,12 +44,12 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             String trashAreaIdList = data.get("trashAreaIdList");
             String collectJobId = data.get("collectJobId");
 
-
             RouteNotification route = new RouteNotification(origin, destination, waypoints, locations, trashAreaIdList, collectJobId);
-
+            //save vao db
             MyDatabaseHelper db = new MyDatabaseHelper(this);
             db.addRouteNotification(route);
-
+            //show noti
+            sendNotification("Tuyến đường mới", "Thông tin về tuyến đường mới");
         }
     }
 
@@ -106,4 +106,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
+
+
 }

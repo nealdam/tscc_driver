@@ -24,7 +24,7 @@
         android:src="@drawable/worker2"/>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/txtName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_space"

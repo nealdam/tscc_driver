@@ -6,7 +6,6 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
@@ -29,4 +28,7 @@ public interface TSCCDriverClient {
     Call<String> completeCollectJob(@Header("Authorization") String authorization,
                                     @Path("id") int id);
 
+    @GET("/api/employees/email/{email}")
+    Call<Employee> getDriver(@Header("Authorization") String authorization,
+                             @Path("email") String email);
 }

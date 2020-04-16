@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,17 +20,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
-import androidx.core.content.ContextCompat;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
 
@@ -40,7 +37,6 @@ public class LoginActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         askPermisson();
         setContentView(R.layout.activity_login);
-
 
 
         //tạo sqlite
@@ -131,16 +127,16 @@ public class LoginActivity extends AppCompatActivity{
 
     private void getJWTAndSavetoSharedPreference() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        SharedPreferences sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
         if (user != null) {
+            SharedPreferences sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
+            final SharedPreferences.Editor editor = sharedPreferences.edit();
             user.getIdToken(true)
                     .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                         @Override
                         public void onComplete(@NonNull Task<GetTokenResult> task) {
                             if (task.isSuccessful()) {
                                 String jwtToken = Objects.requireNonNull(task.getResult()).getToken();
-                                jwtToken  = "Bearer " + jwtToken;
+                                jwtToken = "Bearer " + jwtToken;
                                 editor.putString("token", jwtToken);
                                 editor.apply();
                             }
@@ -148,4 +144,6 @@ public class LoginActivity extends AppCompatActivity{
                     });
         }
     }
+
+
 }
