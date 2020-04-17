@@ -3,7 +3,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.Date;
 
 public class CollectJobResponse implements Serializable, Comparable<CollectJobResponse>  {
 

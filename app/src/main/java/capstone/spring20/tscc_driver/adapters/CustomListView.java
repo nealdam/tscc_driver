@@ -9,6 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -45,11 +48,24 @@ public class CustomListView extends ArrayAdapter<CollectJobResponse> {
             holder = (ViewHolder) convertView.getTag ();
         }
 
-        holder.txtDate.setText(rowItem.getCreatAt());
+        String oldFormat = "yyyy-MM-dd'T'HH:mm:ss";
+        String newFormat = "E, dd/MM 'lúc' HH:mm";
+
+        try {
+            SimpleDateFormat sformat = new SimpleDateFormat(oldFormat);
+            Date date = sformat.parse(rowItem.getCreatAt ());
+            sformat.applyPattern ( newFormat );
+            String newDate = sformat.format ( date );
+            holder.txtDate.setText(newDate);
+        } catch (ParseException e) {
+            holder.txtDate.setText ( rowItem.getCreatAt () );
+            e.printStackTrace ();
+        }
+
         switch (rowItem.getTrashStatus ()) {
 
             case "PROCESSING":
-                holder.icon.setImageResource ( R.drawable.ic_alarm_yellow_60dp );
+                holder.icon.setImageResource ( R.drawable.ic_watch_later_60dp );
                 holder.txtTitle.setText (R.string.trash_processing);
                 break;
             case "CANCEL":
