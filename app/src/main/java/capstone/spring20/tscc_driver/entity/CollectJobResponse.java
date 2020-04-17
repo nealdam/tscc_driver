@@ -9,16 +9,16 @@ public class CollectJobResponse implements Serializable, Comparable<CollectJobRe
 
     @SerializedName("creatAt")
     @Expose
-    private Instant creatAt;
+    private String creatAt;
     @SerializedName("trashStatus")
     @Expose
     private String trashStatus;
 
-    public Instant getCreatAt() {
+    public String getCreatAt() {
         return creatAt;
     }
 
-    public void setCreatAt(Instant creatAt) {
+    public void setCreatAt(String creatAt) {
         this.creatAt = creatAt;
     }
 

@@ -37,6 +37,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
 
+    <string name="trash_processing">Điểm rác đang thu gom</string>
+    <string name="trash_done">Điểm rác đã hoàn thành thu gom</string>
+    <string name="trash_cancel">Điểm rác đã bị huỷ</string>
+
     <string-array name="trashType">
         <item>ORGANIC</item>
         <item>RECYCLE</item>

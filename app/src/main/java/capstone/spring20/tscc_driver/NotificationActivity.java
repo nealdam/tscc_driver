@@ -2,6 +2,7 @@ package capstone.spring20.tscc_driver;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +17,14 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import capstone.spring20.tscc_driver.Api.ApiController;
 import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
+import capstone.spring20.tscc_driver.adapters.CustomListView;
 import capstone.spring20.tscc_driver.entity.CollectJobResponse;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
@@ -34,6 +37,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class NotificationActivity extends Fragment {
 
     ListView listView;
+    List<CollectJobResponse> rowItems;
     List<RouteNotification> routeList = new ArrayList<>();
     List<CollectJobResponse> collectJobList = new ArrayList<>();
     ArrayAdapter<RouteNotification> routeListAdapter;
@@ -47,31 +51,36 @@ public class NotificationActivity extends Fragment {
 
         setupBasic(rootView);
 
+
+
+
         return rootView;
     }
 
-    private void setupBasic(View rootView) {
+    private void setupBasic(final View rootView) {
+        //bỏ strict để có thể call api sync
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         listView = rootView.findViewById(R.id.listview);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("JWT", MODE_PRIVATE);
         jwtToken = sharedPreferences.getString("token", "");
 
         TSCCDriverClient client = ApiController.getTsccDriverClient();
         Call<List<CollectJobResponse>> call = client.getCollectJobs(jwtToken, FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        call.enqueue(new Callback<List<CollectJobResponse>>() {
-            @Override
-            public void onResponse(Call<List<CollectJobResponse>> call, @NotNull Response<List<CollectJobResponse>> response) {
-                //lấy data từ server
-                collectJobList = response.body();
-                Collections.sort(collectJobList);
-                //set vào UI
-                collectJobAdapter = new ArrayAdapter<>(getActivity(),
-                        android.R.layout.simple_expandable_list_item_1, android.R.id.text1, collectJobList);
-                listView.setAdapter(collectJobAdapter);
-            }
-            @Override
-            public void onFailure(Call<List<CollectJobResponse>> call, Throwable t) {
-            }
-        });
+        try {
+            collectJobList = call.execute().body();
+            Collections.sort(collectJobList);
+            //set vào UI
+            //set vào UI
+            collectJobAdapter = new CustomListView (getActivity(), R.layout.list_noti_items, collectJobList);
+            listView.setAdapter(collectJobAdapter);
+            /*collectJobAdapter = new ArrayAdapter<>(getActivity(),
+                    android.R.layout.simple_expandable_list_item_1, android.R.id.text1, collectJobList);
+            listView.setAdapter(collectJobAdapter);*/
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }
