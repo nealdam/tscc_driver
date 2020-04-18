@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,7 @@ import capstone.spring20.tscc_driver.Api.ApiController;
 import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
 import capstone.spring20.tscc_driver.entity.TrashArea;
+import capstone.spring20.tscc_driver.util.IconUtil;
 import capstone.spring20.tscc_driver.util.LocationUtil;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
 import capstone.spring20.tscc_driver.util.ParseUtil;
@@ -86,11 +88,13 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
     public RouteFragment() {
         // Required empty public constructor
     }
+
     @Override
     public void onAttach(@NonNull Context context) {
         myContext = (Activity) context;
         super.onAttach(context);
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -104,6 +108,7 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
             EasyPermissions.requestPermissions(this, "Bạn cần có vị trí để sử dụng ứng dụng.", 123, perms);
         }
     }
+
     @AfterPermissionGranted(123)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -156,6 +161,7 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
             }
         });
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -180,19 +186,13 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
             //check xem có đang thu tuyến rác nào ko
             if (route != null) { //show marker và đường đi
                 showData();
-//                //TEST
-//                mMap.addMarker(new MarkerOptions()
-//                        .position(new LatLng(10.782068, 106.667726))
-//                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-//                mMap.addMarker(new MarkerOptions()
-//                        .position(new LatLng(10.782068, 106.667726))
-//                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.smalli)));
-//
-//                //END TEST
             }
         }
     }
-    private void showData(){
+
+    private void showData() {
+        mMap.clear();
+        //điểm đầu và cuối
         mMap.addMarker(new MarkerOptions()
                 .position(origin)
                 .title("begin")
@@ -202,22 +202,22 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
                 .title("end")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         // tạo marker cho trash area
+        int index = 1;
         for (TrashArea t : trashAreaList) {
-            MarkerOptions options = createMakerOptions(t);
+            MarkerOptions options;
+            if (t.getStatus().getName().equals("PROCESSING"))
+                options = createMakerOptions(t, index++);
+            else
+                options = createMakerOptions(t, 0);
             mMap.addMarker(options);
         }
-        /*for (int i = 0; i < waypoints.size(); i++) {
-            Marker marker = mMap.addMarker(new MarkerOptions()
-                    .position(waypoints.get(i))
-                    .title(trashIdArray[i]) // gán trash id vô marker title
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-        }*/
         // vẽ tuyến đường
         polylineOptions.addAll(locations);
         Polyline line = mMap.addPolyline(polylineOptions);
         line.setWidth(6);
         line.setColor(Color.BLUE);
     }
+
     public void getDataFromNotificationMessage() {
         if (route != null) {
             //get data from notification messsage
@@ -236,8 +236,10 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
             trashIdArray = trashAreaIdListString.split(",");
         }
     }
+
     private void setupTrashAreaList() {
         if (trashIdArray != null) {
+            trashAreaList.clear();
             for (String id : trashIdArray) {
                 Call<TrashArea> call = client.getTrashAreaById(jwtToken, ParseUtil.tryParseStringtoInt(id, 0));
                 try {
@@ -250,6 +252,7 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
             }
         }
     }
+
     private void checkIsJobComplete() {
         boolean isComplete = true;
 
@@ -261,25 +264,49 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
         if (isComplete)
             mComplete.setVisibility(View.VISIBLE);
     }
+
     @Override
     public boolean onMarkerClick(Marker marker) {
         Intent intent = new Intent(getActivity(), PopupActivity.class);
         intent.putExtra("trashAreaId", marker.getTitle());
+        intent.putExtra("trashAreaList", (Serializable) trashAreaList);
         startActivity(intent);
         return true;
     }
 
-    private MarkerOptions createMakerOptions(TrashArea t) {
+    private MarkerOptions createMakerOptions(TrashArea t, int index) {
+        MarkerOptions options;
         LatLng location = new LatLng(t.getLatitude(), t.getLongitude());
-//        String iconName = IconUtil.getIconName(t);
-
-        return new MarkerOptions()
-                .position(location)
-                .title(String.valueOf(t.getId())) // gán trash id vô marker title
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+        String iconName = IconUtil.getIconName(t, index);
+        try {
+            options = new MarkerOptions()
+                    .position(location)
+                    .title(String.valueOf(t.getId())) // gán trash id vô marker title
 //                .icon(BitmapDescriptorFactory.fromResource(R.drawable.recy_processing30));
-//                .icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier(iconName, "drawable", R.drawable.class.getPackage().getName())));
+                    .icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier(iconName, "drawable", R.drawable.class.getPackage().getName())));
+        } catch (Exception e) {
+            options = new MarkerOptions()
+                    .position(location)
+                    .title(String.valueOf(t.getId())) // gán trash id vô marker title
+                    .icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("default", "drawable", R.drawable.class.getPackage().getName())));
+
+        }
+
+        return options;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            checkIsJobComplete();
+            setupTrashAreaList();
+            showData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -287,10 +314,12 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
 
         }
     }
+
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
 
     }
+
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {

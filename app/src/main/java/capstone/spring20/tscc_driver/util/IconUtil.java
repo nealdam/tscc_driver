@@ -6,51 +6,51 @@ public class IconUtil {
     public static String getIconName(TrashArea t, int numOrder) {
         String iconName = "";
 
-        String type = t.getType().getName();
-        String status = t.getStatus().getName();
+        String type = t.getType().getName().toLowerCase();
+        String status = t.getStatus().getName().toLowerCase();
         switch (type) {
-            case "RECYCLE":
-                iconName += "RECYCLE";
+            case "recycle":
+                iconName += "recycle";
                 switch (status) {
-                    case "PROCESSING":
-                        iconName += "_PROCESSING_";
+                    case "processing":
+                        iconName += "_processing_";
                         iconName += numOrder;
                         break;
-                    case "CANCELED":
-                        iconName += "_CANCELED";
+                    case "canceled":
+                        iconName += "_canceled";
                         break;
-                    case "DONE":
-                        iconName += "_DONE";
+                    case "done":
+                        iconName += "_done";
                         break;
                 }
                 break;
-            case "ORGANIC":
-                iconName += "ORGANIC";
+            case "organic":
+                iconName += "organic";
                 switch (status) {
-                    case "PROCESSING":
-                        iconName += "_PROCESSING_";
+                    case "processing":
+                        iconName += "_processing_";
                         iconName += numOrder;
                         break;
-                    case "CANCELED":
-                        iconName += "_CANCELED";
+                    case "canceled":
+                        iconName += "_canceled";
                         break;
-                    case "DONE":
-                        iconName += "_DONE";
+                    case "done":
+                        iconName += "_done";
                         break;
                 }
                 break;
-            case "OTHER":
-                iconName += "OTHER";
+            case "other":
+                iconName += "other";
                 switch (status) {
-                    case "PROCESSING":
-                        iconName += "_PROCESSING_";
+                    case "processing":
+                        iconName += "_processing_";
                         iconName += numOrder;
                         break;
-                    case "CANCELED":
-                        iconName += "_CANCELED";
+                    case "canceled":
+                        iconName += "_canceled";
                         break;
-                    case "DONE":
-                        iconName += "_DONE";
+                    case "done":
+                        iconName += "_done";
                         break;
                 }
                 break;

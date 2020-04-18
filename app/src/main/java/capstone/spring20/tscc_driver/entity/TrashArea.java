@@ -3,7 +3,9 @@ package capstone.spring20.tscc_driver.entity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class TrashArea {
+import java.io.Serializable;
+
+public class TrashArea implements Serializable {
 
     @SerializedName("updatedAt")
     @Expose
@@ -160,7 +162,7 @@ public class TrashArea {
         this.createAt = createAt;
     }
 
-    public class Width {
+    public class Width implements Serializable  {
 
         @SerializedName("id")
         @Expose
@@ -185,7 +187,7 @@ public class TrashArea {
             this.name = name;
         }
     }
-    public class Type {
+    public class Type implements Serializable  {
 
         @SerializedName("id")
         @Expose
@@ -211,7 +213,7 @@ public class TrashArea {
         }
 
     }
-    public class Size {
+    public class Size implements Serializable  {
 
         @SerializedName("id")
         @Expose
