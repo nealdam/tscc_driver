@@ -15,8 +15,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,8 +27,6 @@ import capstone.spring20.tscc_driver.entity.CollectJobResponse;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -72,12 +68,8 @@ public class NotificationActivity extends Fragment {
             collectJobList = call.execute().body();
             Collections.sort(collectJobList);
             //set vào UI
-            //set vào UI
             collectJobAdapter = new CustomListView (getActivity(), R.layout.list_noti_items, collectJobList);
             listView.setAdapter(collectJobAdapter);
-            /*collectJobAdapter = new ArrayAdapter<>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1, android.R.id.text1, collectJobList);
-            listView.setAdapter(collectJobAdapter);*/
         } catch (IOException e) {
             e.printStackTrace();
         }

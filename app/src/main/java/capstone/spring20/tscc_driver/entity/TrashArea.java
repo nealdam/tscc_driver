@@ -20,6 +20,9 @@ public class TrashArea {
     @SerializedName("street")
     @Expose
     private String street;
+    @SerializedName("streetNumber")
+    @Expose
+    private String streetNumber = "";
     @SerializedName("district")
     @Expose
     private String district;
@@ -79,6 +82,14 @@ public class TrashArea {
 
     public String getStreet() {
         return street;
+    }
+
+    public String getStreetNumber() {
+        return streetNumber;
+    }
+
+    public void setStreetNumber(String streetNumber) {
+        this.streetNumber = streetNumber;
     }
 
     public void setStreet(String street) {

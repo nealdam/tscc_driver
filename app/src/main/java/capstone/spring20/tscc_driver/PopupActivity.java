@@ -1,15 +1,5 @@
 package capstone.spring20.tscc_driver;
 
-import androidx.appcompat.app.AppCompatActivity;
-import capstone.spring20.tscc_driver.Api.ApiController;
-import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
-import capstone.spring20.tscc_driver.entity.Status;
-import capstone.spring20.tscc_driver.entity.TrashArea;
-import capstone.spring20.tscc_driver.util.ParseUtil;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +10,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import capstone.spring20.tscc_driver.Api.ApiController;
+import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
+import capstone.spring20.tscc_driver.entity.Status;
+import capstone.spring20.tscc_driver.entity.TrashArea;
+import capstone.spring20.tscc_driver.util.ParseUtil;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PopupActivity extends AppCompatActivity {
 
@@ -66,7 +67,7 @@ public class PopupActivity extends AppCompatActivity {
 
     private void showTrashAreaInformation() {
         if (trashArea != null) {
-            txtAddress.setText(trashArea.getStreet() + ", " + trashArea.getDistrict() + ", " + trashArea.getCity());
+            txtAddress.setText(trashArea.getStreetNumber() + " " + trashArea.getStreet() + ", " + trashArea.getDistrict() + ", " + trashArea.getCity());
         }
     }
 
