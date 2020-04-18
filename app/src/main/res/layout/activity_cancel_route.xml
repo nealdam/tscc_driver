@@ -5,15 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".NotificationActivity">
+    tools:context=".CancelRouteActivity">
 
-    <!--
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/titleBar">
-
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/txt2"
-                    android:text="Thông Báo"
+                    android:text="@string/btn_trash_cancel"
                     android:textStyle="bold"
                     android:textAlignment="center"
                     android:textColor="@color/cardview_light_background"
@@ -49,12 +46,48 @@
         </LinearLayout>
 
     </RelativeLayout>
-    -->
-
-    <ListView
-        android:id="@+id/listview"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lý do:"
+            android:textSize="@dimen/txt2_5"
+            android:layout_marginBottom="5dp"/>
+
+        <EditText
+            android:id="@+id/input_reason"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:inputType="text|textMultiLine"
+            android:gravity="top"
+            android:background="@drawable/boder_edit"
+            android:padding="5dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btnSendReason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:textColor="@color/cardview_light_background"
+            android:textStyle="bold"
+            android:textSize="@dimen/txt2_5"
+            android:background="@drawable/button_report"
+            android:text="Gửi yêu cầu"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

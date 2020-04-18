@@ -35,9 +35,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        askPermisson();
         setContentView(R.layout.activity_login);
-
+        askPermisson();
 
         //tạo sqlite
         MyDatabaseHelper db = new MyDatabaseHelper(this);

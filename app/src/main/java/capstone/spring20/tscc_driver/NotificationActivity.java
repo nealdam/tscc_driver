@@ -1,86 +1,86 @@
 package capstone.spring20.tscc_driver;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import capstone.spring20.tscc_driver.Api.ApiController;
+import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
+import capstone.spring20.tscc_driver.adapters.CustomListView;
+import capstone.spring20.tscc_driver.entity.CollectJobResponse;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class NotificationActivity extends Fragment {
 
     ListView listView;
-    Button btnBack;
+    List<CollectJobResponse> rowItems;
     List<RouteNotification> routeList = new ArrayList<>();
+    List<CollectJobResponse> collectJobList = new ArrayList<>();
     ArrayAdapter<RouteNotification> routeListAdapter;
+    ArrayAdapter<CollectJobResponse> collectJobAdapter;
     MyDatabaseHelper db;
+    String jwtToken;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.activity_notification, container,false);
+        final View rootView = inflater.inflate(R.layout.activity_notification, container, false);
 
         setupBasic(rootView);
 
-        routeListAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_expandable_list_item_1, android.R.id.text1, routeList);
-        listView.setAdapter(routeListAdapter);
+
+
+
         return rootView;
     }
 
-    /*@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notification);
-        setupBasic();
-
-        btnBack = findViewById(R.id.btn_back);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NotificationActivity.this.onBackPressed();
-            }
-        });
-        routeListAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_expandable_list_item_1, android.R.id.text1, routeList);
-        listView.setAdapter(routeListAdapter);
-
-    }*/
-
-    private void setupBasic(View rootView) {
-        db = new MyDatabaseHelper(getActivity());
-        routeList = db.getAllRouteNotification();
-        Collections.sort(routeList);
+    private void setupBasic(final View rootView) {
+        //bỏ strict để có thể call api sync
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         listView = rootView.findViewById(R.id.listview);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                RouteNotification routeNotification = (RouteNotification) parent.getItemAtPosition(position);
-                boolean isActive = routeNotification.isActive();
-                if (isActive) {
-                    RouteFragment routeFragment = new RouteFragment();
-                    Bundle args = new Bundle();
-                    args.putSerializable("routeNotification", routeNotification);
-                    routeFragment.setArguments(args);
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, routeFragment).commit();
-                } else {
-                    Toast.makeText(getActivity(), "Mission complete", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("JWT", MODE_PRIVATE);
+        jwtToken = sharedPreferences.getString("token", "");
+
+        TSCCDriverClient client = ApiController.getTsccDriverClient();
+        Call<List<CollectJobResponse>> call = client.getCollectJobs(jwtToken, FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        try {
+            collectJobList = call.execute().body();
+            Collections.sort(collectJobList);
+            //set vào UI
+            //set vào UI
+            collectJobAdapter = new CustomListView (getActivity(), R.layout.list_noti_items, collectJobList);
+            listView.setAdapter(collectJobAdapter);
+            /*collectJobAdapter = new ArrayAdapter<>(getActivity(),
+                    android.R.layout.simple_expandable_list_item_1, android.R.id.text1, collectJobList);
+            listView.setAdapter(collectJobAdapter);*/
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

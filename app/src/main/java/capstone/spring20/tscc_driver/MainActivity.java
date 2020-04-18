@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -158,8 +160,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         });
                 break;
+
         }
         drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId ()) {
+            case R.id.cancel_route:
+                startActivity ( new Intent ( MainActivity.this, CancelRouteActivity.class ) );
+                break;
+        }
+        return true;
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater ().inflate ( R.menu.main, menu );
         return true;
     }
 }
