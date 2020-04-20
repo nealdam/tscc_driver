@@ -56,6 +56,6 @@ public class IconUtil {
                 break;
         }
 
-        return iconName.isEmpty() ? "default" : iconName ;
+        return iconName.isEmpty() ? "default_image" : iconName ;
     }
 }

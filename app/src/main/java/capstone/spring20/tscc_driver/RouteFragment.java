@@ -288,7 +288,7 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
             options = new MarkerOptions()
                     .position(location)
                     .title(String.valueOf(t.getId())) // gán trash id vô marker title
-                    .icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("default", "drawable", R.drawable.class.getPackage().getName())));
+                    .icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("default_image", "drawable", R.drawable.class.getPackage().getName())));
 
         }
 
