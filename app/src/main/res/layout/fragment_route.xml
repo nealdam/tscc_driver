@@ -24,15 +24,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:textColor="@color/cardview_light_background"
-            android:textStyle="bold"
-            android:textSize="@dimen/txt2_5"
-            android:background="@drawable/button_confirm"
-            android:text="Hoàn thành"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="5dp" />
-        <!--            android:visibility="invisible"-->
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/button_confirm"
+            android:text="Hoàn thành"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="@dimen/txt2_5"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
 
     </FrameLayout>
 </LinearLayout>

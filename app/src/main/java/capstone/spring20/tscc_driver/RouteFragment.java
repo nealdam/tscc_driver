@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,7 @@ import capstone.spring20.tscc_driver.Api.ApiController;
 import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
 import capstone.spring20.tscc_driver.entity.TrashArea;
+import capstone.spring20.tscc_driver.util.IconUtil;
 import capstone.spring20.tscc_driver.util.LocationUtil;
 import capstone.spring20.tscc_driver.util.MyDatabaseHelper;
 import capstone.spring20.tscc_driver.util.ParseUtil;
@@ -60,7 +62,7 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyPermissions.PermissionCallbacks {
+public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyPermissions.PermissionCallbacks, GoogleMap.OnMarkerClickListener {
 
     String TAG = "RouteFragment";
     GoogleMap mMap;
@@ -96,8 +98,6 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
     }
 
     @AfterPermissionGranted(123)
@@ -165,12 +165,15 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (mMap != null) {
+            mMap.setOnMarkerClickListener(this);
             // move camera vào my current location
             mMap.setMyLocationEnabled(true);
             LocationManager lm = (LocationManager) myContext.getSystemService(Context.LOCATION_SERVICE);
+            assert lm != null;
             @SuppressLint("MissingPermission") Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             //zoom map to my location
+            assert location != null;
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
@@ -180,42 +183,100 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             //check xem có đang thu tuyến rác nào ko
-            if (route != null) { //lấy data, add marker và đường đi vào map
-                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker marker) { // click marker để show trash area detail
-                        Intent intent = new Intent(getActivity(), PopupActivity.class);
-                        intent.putExtra("trashAreaId", marker.getTitle());
-                        startActivity(intent);
-                        return true;
-
-                    }
-                });
-                // Add markers in locations and move the camera
-                mMap.addMarker(new MarkerOptions()
-                        .position(origin)
-                        .title("begin")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                mMap.addMarker(new MarkerOptions()
-                        .position(destination)
-                        .title("end")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                // tạo marker cho trash area
-                for (int i = 0; i < waypoints.size(); i++) {
-                    Marker marker = mMap.addMarker(new MarkerOptions()
-                            .position(waypoints.get(i))
-                            .title(trashIdArray[i]) // gán trash id vô marker title
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-                    markerDict.put(Integer.parseInt(trashIdArray[i]), marker); //save trashAreaId:marker theo dạng key:value
-                }
-                // vẽ tuyến đường
-                polylineOptions.addAll(locations);
-                Polyline line = mMap.addPolyline(polylineOptions);
-                line.setWidth(5);
-                line.setColor(Color.BLUE);
-
-
+            if (route != null) { //show marker và đường đi
+                showData();
             }
+        }
+    }
+
+    private void showData() {
+        mMap.clear();
+        //điểm đầu và cuối
+        mMap.addMarker(new MarkerOptions()
+                .position(origin)
+                .title("begin")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        mMap.addMarker(new MarkerOptions()
+                .position(destination)
+                .title("end")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        // tạo marker cho trash area
+        int index = 1;
+        for (TrashArea t : trashAreaList) {
+            MarkerOptions options;
+            if (t.getStatus().getName().equals("PROCESSING"))
+                options = createMakerOptions(t, index++);
+            else
+                options = createMakerOptions(t, 0);
+            mMap.addMarker(options);
+        }
+        // vẽ tuyến đường
+        polylineOptions.addAll(locations);
+        Polyline line = mMap.addPolyline(polylineOptions);
+        line.setWidth(6);
+        line.setColor(Color.BLUE);
+    }
+
+    public void getDataFromNotificationMessage() {
+        if (route != null) {
+            //get data from notification messsage
+            originString = route.getOrigin();
+            destinationString = route.getDestination();
+            waypointsString = route.getWaypoints();
+            locationsString = route.getLocations();
+            trashAreaIdListString = route.getTrashAreaIdList();
+            collectJobId = route.getCollectJobId();
+            //convert location string to latLng
+            origin = LocationUtil.stringToLatLng(originString);
+            destination = LocationUtil.stringToLatLng(destinationString);
+            waypoints = LocationUtil.stringToList(waypointsString);
+            locations = LocationUtil.stringToList(locationsString);
+            //convert string to array
+            trashIdArray = trashAreaIdListString.split(",");
+        }
+    }
+
+
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Intent intent = new Intent(getActivity(), PopupActivity.class);
+        intent.putExtra("trashAreaId", marker.getTitle());
+        intent.putExtra("trashAreaList", (Serializable) trashAreaList);
+        startActivity(intent);
+        return true;
+    }
+
+    private MarkerOptions createMakerOptions(TrashArea t, int index) {
+        MarkerOptions options;
+        LatLng location = new LatLng(t.getLatitude(), t.getLongitude());
+        String iconName = IconUtil.getIconName(t, index);
+        try {
+            options = new MarkerOptions()
+                    .position(location)
+                    .title(String.valueOf(t.getId())) // gán trash id vô marker title
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.recy_processing30));
+                    .icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier(iconName, "drawable", R.drawable.class.getPackage().getName())));
+        } catch (Exception e) {
+            options = new MarkerOptions()
+                    .position(location)
+                    .title(String.valueOf(t.getId())) // gán trash id vô marker title
+                    .icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("default_image", "drawable", R.drawable.class.getPackage().getName())));
+
+        }
+
+        return options;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            checkIsJobComplete();
+            setupTrashAreaList();
+            showData();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -236,25 +297,6 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             new AppSettingsDialog.Builder(this).build().show();
-        }
-    }
-
-    public void getDataFromNotificationMessage() {
-        if (route != null) {
-            //get data from notification messsage
-            originString = route.getOrigin();
-            destinationString = route.getDestination();
-            waypointsString = route.getWaypoints();
-            locationsString = route.getLocations();
-            trashAreaIdListString = route.getTrashAreaIdList();
-            collectJobId = route.getCollectJobId();
-            //convert location string to latLng
-            origin = LocationUtil.stringToLatLng(originString);
-            destination = LocationUtil.stringToLatLng(destinationString);
-            waypoints = LocationUtil.stringToList(waypointsString);
-            locations = LocationUtil.stringToList(locationsString);
-            //convert string to array
-            trashIdArray = trashAreaIdListString.split(",");
         }
     }
 
@@ -284,9 +326,6 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
         if (isComplete)
             mComplete.setVisibility(View.VISIBLE);
     }
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }*/
+
+
 }

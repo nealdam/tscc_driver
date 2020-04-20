@@ -3,7 +3,9 @@ package capstone.spring20.tscc_driver.entity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Status {
+import java.io.Serializable;
+
+public class Status implements Serializable {
     @SerializedName("id")
     @Expose
     private Integer id;
