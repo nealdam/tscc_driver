@@ -35,7 +35,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -242,7 +241,6 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
     public boolean onMarkerClick(Marker marker) {
         Intent intent = new Intent(getActivity(), PopupActivity.class);
         intent.putExtra("trashAreaId", marker.getTitle());
-        intent.putExtra("trashAreaList", (Serializable) trashAreaList);
         startActivity(intent);
         return true;
     }
@@ -272,8 +270,8 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
     public void onResume() {
         super.onResume();
         try {
-            checkIsJobComplete();
             setupTrashAreaList();
+            checkIsJobComplete();
             showData();
         } catch (Exception e) {
             e.printStackTrace();
@@ -302,6 +300,7 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
 
     private void setupTrashAreaList() {
         if (trashIdArray != null) {
+            trashAreaList.clear();
             for (String id : trashIdArray) {
                 Call<TrashArea> call = client.getTrashAreaById(jwtToken, ParseUtil.tryParseStringtoInt(id, 0));
                 try {

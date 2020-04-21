@@ -13,8 +13,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.List;
-
 import capstone.spring20.tscc_driver.Api.ApiController;
 import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
 import capstone.spring20.tscc_driver.entity.Status;
@@ -34,7 +32,6 @@ public class PopupActivity extends AppCompatActivity {
     EditText mTrashType, mTrashSize, mTrashWidth;
     TextView txtAddress;
     String token;
-    List<TrashArea> trashAreaList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +72,6 @@ public class PopupActivity extends AppCompatActivity {
 
     public void setupBasic() {
         trashAreaId = getIntent().getStringExtra("trashAreaId");
-        trashAreaList = (List<TrashArea>) getIntent().getSerializableExtra("trashAreaList");
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
         token = sharedPreferences.getString("token", "");
