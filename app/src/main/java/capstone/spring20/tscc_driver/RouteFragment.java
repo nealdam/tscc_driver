@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,6 +43,7 @@ import java.util.Map;
 
 import capstone.spring20.tscc_driver.Api.ApiController;
 import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
+import capstone.spring20.tscc_driver.entity.CollectJob;
 import capstone.spring20.tscc_driver.entity.RouteNotification;
 import capstone.spring20.tscc_driver.entity.TrashArea;
 import capstone.spring20.tscc_driver.util.IconUtil;
@@ -143,14 +145,17 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
                     MyDatabaseHelper db = new MyDatabaseHelper(myContext);
                     db.deactiveRouteNotification(route.getId());
                     //complete collectJob status
-                    Call<String> call = client.completeCollectJob(jwtToken, Integer.parseInt(collectJobId));
-                    call.enqueue(new Callback<String>() {
+                    Call<CollectJob> call = client.completeCollectJob(jwtToken, ParseUtil.tryParseStringtoInt(collectJobId, 0));
+                    call.enqueue(new Callback<CollectJob>() {
                         @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
+                        public void onResponse(Call<CollectJob> call, Response<CollectJob> response) {
+                            mComplete.setVisibility(View.INVISIBLE);
+                            Toast.makeText(getActivity(), "Nhiệm vụ thành công", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
-                        public void onFailure(Call<String> call, Throwable t) {
+                        public void onFailure(Call<CollectJob> call, Throwable t) {
+                            Toast.makeText(getActivity(), "Đã có sự cố, chưa thể hoàn thành nhiệm vụ", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

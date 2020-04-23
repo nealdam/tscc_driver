@@ -2,6 +2,7 @@ package capstone.spring20.tscc_driver.Api;
 
 import java.util.List;
 
+import capstone.spring20.tscc_driver.entity.CollectJob;
 import capstone.spring20.tscc_driver.entity.CollectJobResponse;
 import capstone.spring20.tscc_driver.entity.Employee;
 import capstone.spring20.tscc_driver.entity.TrashArea;
@@ -28,8 +29,8 @@ public interface TSCCDriverClient {
                                   @Path("email") String email, @Path("token") String token);
 
     @GET("/api/collect-jobs/complete/{id}")
-    Call<String> completeCollectJob(@Header("Authorization") String authorization,
-                                    @Path("id") int id);
+    Call<CollectJob> completeCollectJob(@Header("Authorization") String authorization,
+                                        @Path("id") int id);
 
     @GET("/api/collect-jobs/driver/{email}")
     Call<List<CollectJobResponse>> getCollectJobs(@Header("Authorization") String authorization,
