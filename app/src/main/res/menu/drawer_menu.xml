@@ -18,10 +18,10 @@
             android:title="Đăng xuất" />
     </group>
 
-    <item android:title="Thông tin hổ trợ">
+    <item android:title="Thông tin hỗ trợ">
         <menu>
-            <item android:title="Điện thoại hỗ trợ" />
-            <item android:title="Điện thoại hỗ trợ" />
+            <item android:title="Điện thoại hỗ trợ: 0904458745" />
+            <item android:title="Email liên hệ: tscc@gmail.com" />
         </menu>
     </item>
 </menu>
