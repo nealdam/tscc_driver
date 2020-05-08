@@ -240,8 +240,6 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
         }
     }
 
-
-
     @Override
     public boolean onMarkerClick(Marker marker) {
         Intent intent = new Intent(getActivity(), PopupActivity.class);

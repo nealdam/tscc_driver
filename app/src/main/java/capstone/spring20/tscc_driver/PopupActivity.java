@@ -89,8 +89,14 @@ public class PopupActivity extends AppCompatActivity {
         mReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateTrashAreaStatus(STATUS_CANCELED_CODE);
-
+//                updateTrashAreaStatus(STATUS_CANCELED_CODE);
+                if (trashArea != null && trashAreaId != null) {
+                    Intent intent = new Intent(PopupActivity.this, ReportTrashActivity.class);
+                    intent.putExtra("trashArea", trashArea);
+                    intent.putExtra("trashAreaId", trashAreaId);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
         btnDetail.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +115,7 @@ public class PopupActivity extends AppCompatActivity {
             Status status = new Status();
             status.setId(statusCode);
             trashArea.setStatus(status);
-            Call<TrashArea> call = client.updateTrashAreaStatus(token, Integer.parseInt(trashAreaId), trashArea);
+            Call<TrashArea> call = client.updateTrashAreaStatus(token, ParseUtil.tryParseStringtoInt(trashAreaId, 0), trashArea);
             call.enqueue(new Callback<TrashArea>() {
                 @Override
                 public void onResponse(Call<TrashArea> call, Response<TrashArea> response) {
@@ -119,10 +125,9 @@ public class PopupActivity extends AppCompatActivity {
                     setResult(Activity.RESULT_OK, data);
                     finish();
                 }
-
                 @Override
                 public void onFailure(Call<TrashArea> call, Throwable t) {
-                    Toast.makeText(PopupActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PopupActivity.this, "Đã có lỗi xảy ra, không thể hoàn thành tác vụ", Toast.LENGTH_SHORT).show();
                 }
             });
         }

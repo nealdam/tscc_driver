@@ -91,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         RouteNotification route = new RouteNotification(origin, destination, waypoints, locations, trashAreaIdList, collectJobId);
 
         MyDatabaseHelper db = new MyDatabaseHelper(this);
+        db.deactiveAllRoute();
         db.addRouteNotification(route);
 
         Intent intent = new Intent(this, NotificationActivity.class);

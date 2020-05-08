@@ -135,14 +135,18 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void deactiveRouteNotification(int id) {
-        String sql = "UPDATE " + TABLE_NAME + " SET "
-                + COLUMN_ROUTE_ACTIVE + " = " + "0 "
-                + "WHERE " + COLUMN_ROUTE_ID + " = " + id;
         SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put(COLUMN_ROUTE_ACTIVE, "0");
         db.update(TABLE_NAME, values, "id = "+id, null);
+        db.close();
+    }
+
+    public void deactiveAllRoute() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ROUTE_ACTIVE, "0");
+        db.update(TABLE_NAME, values, null, null);
         db.close();
     }
 }

@@ -49,6 +49,17 @@ public class TrashArea implements Serializable {
     @SerializedName("createAt")
     @Expose
     private String createAt;
+    @SerializedName("report_description")
+    @Expose
+    private String report_description;
+
+    public String getReport_description() {
+        return report_description;
+    }
+
+    public void setReport_description(String report_description) {
+        this.report_description = report_description;
+    }
 
     public String getUpdatedAt() {
         return updatedAt;
@@ -86,16 +97,16 @@ public class TrashArea implements Serializable {
         return street;
     }
 
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
     public String getStreetNumber() {
         return streetNumber;
     }
 
     public void setStreetNumber(String streetNumber) {
         this.streetNumber = streetNumber;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
     }
 
     public String getDistrict() {
@@ -162,7 +173,7 @@ public class TrashArea implements Serializable {
         this.createAt = createAt;
     }
 
-    public class Width implements Serializable  {
+    public class Width implements Serializable {
 
         @SerializedName("id")
         @Expose
@@ -187,7 +198,8 @@ public class TrashArea implements Serializable {
             this.name = name;
         }
     }
-    public class Type implements Serializable  {
+
+    public class Type implements Serializable {
 
         @SerializedName("id")
         @Expose
@@ -213,7 +225,8 @@ public class TrashArea implements Serializable {
         }
 
     }
-    public class Size implements Serializable  {
+
+    public class Size implements Serializable {
 
         @SerializedName("id")
         @Expose

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="capstone.spring20.tscc_driver">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CancelRouteActivity"></activity>
+        <activity android:name=".ReportTrashActivity"></activity>
+        <activity android:name=".CancelRouteActivity" />
         <activity
             android:name=".PopupActivity"
             android:theme="@style/AppTheme.PopupTheme" />
@@ -22,7 +25,6 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-
         <activity
             android:name=".RouteActivity"
             android:label="@string/title_activity_route" />
@@ -60,7 +62,5 @@
             </intent-filter>
         </service>
     </application>
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>

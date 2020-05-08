@@ -2,6 +2,7 @@ package capstone.spring20.tscc_driver.Api;
 
 import java.util.List;
 
+import capstone.spring20.tscc_driver.entity.ApiResponse;
 import capstone.spring20.tscc_driver.entity.CollectJob;
 import capstone.spring20.tscc_driver.entity.CollectJobResponse;
 import capstone.spring20.tscc_driver.entity.Employee;
@@ -10,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
@@ -32,6 +34,9 @@ public interface TSCCDriverClient {
     Call<CollectJob> completeCollectJob(@Header("Authorization") String authorization,
                                         @Path("id") int id);
 
+    @POST("/api/collect-jobs/cancel/{id}")
+    Call<ApiResponse> cancelCollectJob(@Header("Authorization") String authorization,
+                                         @Path("id") int id);
     @GET("/api/collect-jobs/driver/{email}")
     Call<List<CollectJobResponse>> getCollectJobs(@Header("Authorization") String authorization,
                                                   @Path("email") String email);

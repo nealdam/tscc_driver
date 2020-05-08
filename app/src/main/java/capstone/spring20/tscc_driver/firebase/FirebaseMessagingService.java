@@ -47,6 +47,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             RouteNotification route = new RouteNotification(origin, destination, waypoints, locations, trashAreaIdList, collectJobId);
             //save vao db
             MyDatabaseHelper db = new MyDatabaseHelper(this);
+            db.deactiveAllRoute();
             db.addRouteNotification(route);
             //show noti
             sendNotification("Tuyến đường mới", "Thông tin về tuyến đường mới");
