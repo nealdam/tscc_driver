@@ -39,10 +39,10 @@ public class TrashArea implements Serializable {
     private Type type;
     @SerializedName("width")
     @Expose
-    private Width width;
+    private double width;
     @SerializedName("size")
     @Expose
-    private Size size;
+    private double size;
     @SerializedName("status")
     @Expose
     private Status status;
@@ -141,19 +141,19 @@ public class TrashArea implements Serializable {
         this.type = type;
     }
 
-    public Width getWidth() {
+    public double getWidth() {
         return width;
     }
 
-    public void setWidth(Width width) {
+    public void setWidth(double width) {
         this.width = width;
     }
 
-    public Size getSize() {
+    public double getSize() {
         return size;
     }
 
-    public void setSize(Size size) {
+    public void setSize(double size) {
         this.size = size;
     }
 
@@ -171,32 +171,6 @@ public class TrashArea implements Serializable {
 
     public void setCreateAt(String createAt) {
         this.createAt = createAt;
-    }
-
-    public class Width implements Serializable {
-
-        @SerializedName("id")
-        @Expose
-        private Integer id;
-        @SerializedName("name")
-        @Expose
-        private String name;
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 
     public class Type implements Serializable {
@@ -226,32 +200,7 @@ public class TrashArea implements Serializable {
 
     }
 
-    public class Size implements Serializable {
 
-        @SerializedName("id")
-        @Expose
-        private Integer id;
-        @SerializedName("name")
-        @Expose
-        private String name;
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-    }
 
 }
 

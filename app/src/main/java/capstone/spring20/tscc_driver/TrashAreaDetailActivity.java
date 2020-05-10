@@ -1,7 +1,5 @@
 package capstone.spring20.tscc_driver;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import capstone.spring20.tscc_driver.Api.ApiController;
 import capstone.spring20.tscc_driver.Api.TSCCDriverClient;
@@ -67,8 +67,8 @@ public class TrashAreaDetailActivity extends AppCompatActivity {
     private void showTrashAreaInformation() {
         if (trashArea != null) {
             mTrashType.setText(trashArea.getType().getName(), TextView.BufferType.EDITABLE);
-            mTrashSize.setText(trashArea.getSize().getName(), TextView.BufferType.EDITABLE);
-            mTrashWidth.setText(trashArea.getWidth().getName(), TextView.BufferType.EDITABLE);
+            mTrashSize.setText(String.valueOf(trashArea.getSize()), TextView.BufferType.EDITABLE);
+            mTrashWidth.setText(String.valueOf(trashArea.getWidth()), TextView.BufferType.EDITABLE);
         }
     }
 
