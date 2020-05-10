@@ -53,11 +53,36 @@
         android:layout_margin="10dp">
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
             android:text="Lý do:"
-            android:textSize="@dimen/txt2_5"
-            android:layout_marginBottom="5dp"/>
+            android:textSize="24sp" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <RadioButton
+                android:id="@+id/rbCarBroken"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Xe bị hư" />
+
+            <RadioButton
+                android:id="@+id/rbDriverSick"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tài xế bị ốm" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Lý do khác:"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/input_reason"
