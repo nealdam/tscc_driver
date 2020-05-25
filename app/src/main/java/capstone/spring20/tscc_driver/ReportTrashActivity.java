@@ -4,7 +4,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +28,7 @@ public class ReportTrashActivity extends AppCompatActivity {
     EditText mReason;
     Button mSubmit;
     int STATUS_CANCELED_CODE = 3;
+    boolean isReasonChecked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +41,34 @@ public class ReportTrashActivity extends AppCompatActivity {
     private void setupBasic() {
         final TrashArea trashArea = (TrashArea) getIntent().getSerializableExtra("trashArea");
         final String trashAreaId = getIntent().getStringExtra("trashAreaId");
-        mReason = findViewById(R.id.input_reason);
-        mSubmit = findViewById(R.id.btnSendReason);
+        mReason = findViewById(R.id.iReason);
 
+        RadioGroup rbGroup = findViewById(R.id.rbGroup);
+        rbGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                isReasonChecked = true;
+            }
+        });
+
+        RadioButton rbOther = findViewById(R.id.rbOther);
+        rbOther.setOnCheckedChangeListener(new RadioButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mReason.setEnabled(true);
+                } else {
+                    mReason.setEnabled(false);
+                }
+            }
+        });
+
+        mSubmit = findViewById(R.id.btnSendReason);
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String reason = mReason.getText().toString();
-                if (!reason.isEmpty()) {
-                    reportToServer(trashAreaId, trashArea, reason);
+                if (isReasonChecked) {
+                    reportToServer(trashAreaId, trashArea);
                 } else {
                     Toast.makeText(ReportTrashActivity.this, "Xin nhập lý do", Toast.LENGTH_SHORT).show();
                 }
@@ -53,11 +76,10 @@ public class ReportTrashActivity extends AppCompatActivity {
         });
     }
 
-    private void reportToServer(String id, TrashArea trashArea, String reason) {
+    private void reportToServer(String id, TrashArea trashArea) {
         Status status = new Status();
         status.setId(STATUS_CANCELED_CODE);
         trashArea.setStatus(status);
-        trashArea.setReport_description(reason);
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", "");

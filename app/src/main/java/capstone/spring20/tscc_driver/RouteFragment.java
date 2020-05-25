@@ -325,7 +325,7 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback, EasyP
                 isComplete = false;
         }
 
-        if (isComplete)
+        if (isComplete && !trashAreaList.isEmpty())
             mComplete.setVisibility(View.VISIBLE);
     }
 
