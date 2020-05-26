@@ -25,6 +25,8 @@ public class CancelRouteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cancel_route);
 
+        getSupportActionBar().setTitle("Dừng thu gom");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         SharedPreferences sharedPreferences = this.getSharedPreferences("JWT", MODE_PRIVATE);
         final String jwtToken = sharedPreferences.getString("token", "");
         final MyDatabaseHelper db = new MyDatabaseHelper(this);
