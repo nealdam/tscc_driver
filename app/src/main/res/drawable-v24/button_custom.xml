@@ -3,8 +3,7 @@
     android:shape="rectangle">
     <gradient
         android:startColor="@color/buttonColor"
-        android:centerColor="@color/titleBar"
-        android:endColor="@color/buttonColor"
+        android:endColor="@color/buttonCololLight"
         android:angle="45"/>
     <padding android:left="6dp"
         android:top="6dp"
