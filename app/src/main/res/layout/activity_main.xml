@@ -5,63 +5,125 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    tools:context=".MainActivity">
+    android:weightSum="2"
+    tools:context=".MainActivity"
+    android:background="@color/white">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Trash Collection For Driver"
-        android:textAlignment="center"
-        android:textSize="@dimen/txt1" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:weightSum="5">
 
-    <ImageView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/recycle" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/trash_collection"
+                android:textAlignment="center"
+                android:textSize="@dimen/txt1"
+                android:textStyle="bold"
+                android:textColor="@color/titleBar"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hảy chung tay vì môi trường của chúng ta"
+                android:textAlignment="center"
+                android:textStyle="italic"
+                android:textSize="@dimen/txt3"
+                android:textColor="@color/titleBar"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <!--<ImageView
         android:layout_width="@dimen/logo2"
         android:layout_height="@dimen/logo2"
         android:layout_marginTop="@dimen/default_space"
         android:contentDescription="@string/user_logo"
         android:scaleType="fitCenter"
-        android:src="@drawable/worker2"/>
+        android:src="@drawable/citizen" />-->
 
-    <TextView
-        android:id="@+id/txtName"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_space"
-        android:text="Driver"
-        android:textAlignment="center"
-        android:textSize="@dimen/txt2" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_space"
-        android:text="Name: Dinh Vu"
-        android:textAlignment="center"
-        android:textSize="@dimen/txt2" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_space">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nếu bạn nhìn thấy những bãi rác gây ô nhiễm môi trường."
+            android:textAlignment="center"
+            android:textStyle="italic"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hảy gửi hình ảnh cho chứng tôi!"
+            android:textAlignment="center"
+            android:textStyle="italic|bold"/>
 
         <Button
-            android:id="@+id/btnQuestion"
-            android:layout_width="wrap_content"
+            android:id="@+id/btnCamera"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:text="@string/help"
-            app:icon="@drawable/ic_help_outline_24px"
-            tools:ignore="RelativeOverlap" />
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="@dimen/default_space"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_custom"
+            android:drawableLeft="@drawable/ic_camera_alt_white_24dp"
+            android:text="Báo cáo điểm rác"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txt2_5"
+            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnNotification"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="Notification"
-            app:icon="@drawable/ic_notifications_none_24px"/>
+            android:text="Chọn ảnh từ thư viện ảnh của bạn"
+            android:textAlignment="center"
+            android:textStyle="italic"/>
 
-    </RelativeLayout>
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnProfile"
+        android:contentDescription="Trang cá nhân"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="@color/buttonColor"
+        app:backgroundTint="@color/buttonColor"
+        android:src="@drawable/ic_person_white_35dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:text="@string/notification" />
 
 </LinearLayout>
