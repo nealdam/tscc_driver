@@ -12,8 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ReportTrashActivity"></activity>
-        <activity android:name=".CancelRouteActivity" />
+        <activity android:name=".ReportTrashActivity"
+            android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".CancelRouteActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".PopupActivity"
             android:theme="@style/AppTheme.PopupTheme" />

@@ -31,6 +31,9 @@ public class CancelRouteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cancel_route);
 
+        getSupportActionBar().setTitle("Huỷ chuyến thu gom");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         RadioGroup rbGroup = findViewById(R.id.rbGroup);
         rbGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
