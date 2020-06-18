@@ -43,7 +43,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SetLocationPermisson" />
         <activity android:name=".NotificationActivity" />
-        <activity android:name=".TrashAreaDetailActivity" />
+        <activity android:name=".TrashAreaDetailActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
