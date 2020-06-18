@@ -1,5 +1,6 @@
 package capstone.spring20.tscc_driver;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -75,8 +76,11 @@ public class CancelRouteActivity extends AppCompatActivity {
                                 //deactive route
                                 db.deactiveRouteNotification(route.getId());
 
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                        new RouteFragment()).commit();
+//                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+//                                        new RouteFragment()).commit();
+                                Intent intent = new Intent(CancelRouteActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
 
                             @Override
