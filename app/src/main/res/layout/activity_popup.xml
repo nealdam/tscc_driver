@@ -12,17 +12,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="10">
-        <TextView
-            android:id="@+id/txtTrashAddress"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/txt3"
-            android:layout_weight="1.5"/>
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/txt2_5"
+                android:text="Điểm rác"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/txtTrashAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/txt3"
+                android:layout_marginStart="7dp"/>
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/btnDetail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="8.5"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
             android:background="@drawable/ic_info_outline_20dp"/>
 
     </LinearLayout>
@@ -41,6 +57,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@color/cardview_light_background"
             android:textStyle="bold"
             android:textSize="@dimen/txt2_5"
@@ -54,6 +71,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@color/cardview_light_background"
             android:textStyle="bold"
             android:textSize="@dimen/txt2_5"
