@@ -8,4 +8,5 @@
     <color name="red">#f44336</color>
     <color name="gray">#e0e0e0</color>
     <color name="titleBar">#00c853</color>
+    <color name="text">#000000</color>
 </resources>

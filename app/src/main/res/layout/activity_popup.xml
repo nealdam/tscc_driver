@@ -23,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/txt2_5"
                 android:text="Điểm rác"
+                android:textColor="@color/text"
                 android:textStyle="bold"/>
 
             <TextView
@@ -37,7 +38,7 @@
         <Button
             android:id="@+id/btnDetail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="9"
             android:background="@drawable/ic_info_outline_20dp"/>
 
@@ -47,36 +48,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="2"
-        android:gravity="bottom">
+        android:gravity="bottom"
+        android:weightSum="2">
 
         <Button
             android:id="@+id/btnDone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="3dp"
             android:layout_weight="1"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
-            android:textColor="@color/cardview_light_background"
-            android:textStyle="bold"
-            android:textSize="@dimen/txt2_5"
             android:background="@drawable/button_confirm"
-            android:text="Hoàn Thành"/>
+            android:text="Hoàn Thành"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="@dimen/txt2_5"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/btnReport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
             android:layout_weight="1"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
-            android:textColor="@color/cardview_light_background"
-            android:textStyle="bold"
-            android:textSize="@dimen/txt2_5"
             android:background="@drawable/button_report"
-            android:text="Báo Cáo"/>
+            android:text="Báo Cáo"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="@dimen/txt2_5"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
